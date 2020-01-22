@@ -92,7 +92,7 @@ class Register extends Component {
 								<div className="form-group">
 									<label htmlFor="confirmpassword">Confirm Password</label>
 									<Field
-										type="confirmpassword"
+										type="password"
 										name="confirmpassword"
 										placeholder="Enter confirmpassword"
 										className={`form-control ${touched.confirmpassword && errors.confirmpassword ? "is-invalid" : ""}`}

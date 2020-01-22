@@ -11,9 +11,9 @@ export const userService = {
 
 function login(email, password) {
 	return axios({
-		method: 'post',
+		method: 'get',
 		url: baseUrl + 'auth/login',
-		data: {
+		params: {
 			email: email,
 			password: password
 		}
@@ -64,11 +64,11 @@ function forgotpassword(email) {
 
 function resetpassword(objmodel) {
 	return axios({
-		method: 'post',
+		method: 'put',
 		url: baseUrl + 'auth/resetpassword',
 		data: {
 			token: objmodel.token,
-			password:objmodel.password 
+			password: objmodel.password
 		}
 	}).then((user) => {
 		return user.data;

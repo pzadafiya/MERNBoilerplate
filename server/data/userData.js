@@ -18,7 +18,6 @@ const createUser = objToSave =>
       .then(client => resolve(client))
       .catch(err => {
         reject(err);
-        console.log(err);
       });
   });
 

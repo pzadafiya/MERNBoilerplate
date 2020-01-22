@@ -22,7 +22,6 @@ app.use(bodyParser.urlencoded({
 app.use(cors());
 
 app.use((err, req, res, next) => {
-  
   return res.send({
     "statusCode": 401,
     "statusMessage": "Something went wrong"

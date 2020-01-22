@@ -1,10 +1,14 @@
-let environment = "dev";
+const dotenv = require('dotenv');
+dotenv.config();
+
+let environment = process.env.NODE_ENV;
 
 let serverURLs = {
-    "dev": {
-        "NODE_SERVER": "http://localhost",
-        "NODE_SERVER_PORT": "3002",
-        "MONGO_DB": "mongodb://localhost:27017/react-login"
+    
+    "devlopment": {
+        "NODE_SERVER": process.env.NODE_SERVER,
+        "NODE_SERVER_PORT": process.env.NODE_SERVER_PORT,
+        "MONGO_DB": process.env.MONGO_DB_URL
     },
     
 }
