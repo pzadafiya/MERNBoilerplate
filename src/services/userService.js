@@ -82,7 +82,7 @@ function handleError(response) {
 	console.log(response);
 	if (response.status === 401) {
 		logout();
-		throw "User is unauthorized";
+		throw new Error("User is unauthorized")
 	}
 
 	if (response && response.status !== 200) {

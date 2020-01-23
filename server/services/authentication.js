@@ -1,10 +1,9 @@
 const UserData = require('../data/userData');
-const MD5 = require('../node_modules/md5');
+const MD5 = require('md5');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const Joi = require('@hapi/joi');
 require('dotenv').config();
-
 
 /* API to login user */
 let login = async (req, res) => {
@@ -52,20 +51,20 @@ let login = async (req, res) => {
 
 /* API to register new user */
 let register = async (req, res) => {
-
   const schema = Joi.object({
+    firstname: Joi.string()
+      .required(),
+    lastname: Joi.string()
+      .required(),
     email: Joi.string()
       .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
       .required(),
     password: Joi.string()
       .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
       .required(),
-    firstname: Joi.string()
-      .required(),
-    lastname: Joi.string()
-      .required(),
-    username: Joi.string()
-      .required()
+    phonenumber: Joi.string()
+      .allow('')
+      .pattern(new RegExp('^[0-9]{3}-[0-9]{3}-[0-9]{4}$'))
   });
 
   const { error, value } = schema.validate({
@@ -73,9 +72,9 @@ let register = async (req, res) => {
     password: req.body.user.password,
     firstname: req.body.user.firstname,
     lastname: req.body.user.lastname,
-    username: req.body.user.username
+    phonenumber: req.body.user.phonenumber
   });
-
+  console.log(error)
   if (error !== undefined)
     return res.status(400).json({ message: error.details[0].message });
 
@@ -83,7 +82,7 @@ let register = async (req, res) => {
     let criteria = {
       email: value.email
     }
-
+    
     const checkEmail = await UserData.getUsers(criteria);
     if (checkEmail && checkEmail.length === 1)
       return res.status(400).json({ message: 'email already registered' })
@@ -93,6 +92,7 @@ let register = async (req, res) => {
       lastName: value.lastname,
       email: value.email,
       password: MD5(MD5(value.password)),
+      phoneNumber: value.phonenumber,
       status: true
     };
 

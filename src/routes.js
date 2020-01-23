@@ -1,11 +1,11 @@
 import { Route } from 'react-router-dom';
 import { PrivateRoute } from './components/PrivateRoute';
-import Login from './pages/auth/Login';
-import Register from './pages/auth/Register';
-import ForgotPassword from './pages/auth/ForgotPassword';
-import ResetPassword from './pages/auth/ResetPassword';
+import Login from './pages/authentication/Login';
+import Register from './pages/authentication/Register';
+import ForgotPassword from './pages/authentication/ForgotPassword';
+import ResetPassword from './pages/authentication/ResetPassword';
 import Home from './pages/home/index';
-import AuthLayout from './pages/Layout/authlayout';
+import AuthLayout from './pages/Layout/authenticationlayout';
 
 const routes = [
     { path: '/login', component: Login, parentLayout: AuthLayout, route: Route },

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { resetpassword } from '../../store/actions';
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -16,8 +16,8 @@ const ResetPasswordSchema = Yup.object().shape({
 class ResetPassword extends Component {
     render() {
         return (
-            <div className="card rounded shadow shadow-sm">
-                <div className="bg-info">
+            <div className="card rounded shadow shadow-sm position-relative overflow-hidden">
+                <div className="bg-primary">
                     <div className="text-primary text-center p-4">
                         <h5 className="text-white font-size-20">Reset Password</h5>
                     </div>
@@ -44,7 +44,7 @@ class ResetPassword extends Component {
                                     <Field
                                         type="password"
                                         name="password"
-                                        placeholder="Enter Password"
+                                        placeholder="Password"
                                         autoComplete='false'
                                         className={`form-control ${touched.password && errors.password ? "is-invalid" : ""}`}
                                     />
@@ -61,7 +61,7 @@ class ResetPassword extends Component {
                                         type="password"
                                         name="confirmpassword"
                                         autoComplete='false'
-                                        placeholder="Enter Confirm Password"
+                                        placeholder="Confirm Password"
                                         className={`form-control ${touched.confirmpassword && errors.confirmpassword ? "is-invalid" : ""}`}
                                     />
                                     <ErrorMessage
@@ -73,11 +73,10 @@ class ResetPassword extends Component {
 
                                 <button
                                     type="submit"
-                                    className="btn btn-info btn-block"
+                                    className="btn btn-primary btn-block"
                                     disabled={isSubmitting}
-                                > {isSubmitting ? "Please wait..." : "Submit"}
+                                > {isSubmitting ? "Please wait..." : "Reset"}
                                 </button>
-                                <Link to="/login" className="btn btn-link">login</Link>
                             </Form>
                         )}
                     </Formik>

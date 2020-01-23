@@ -11,13 +11,14 @@ var User = require('./models/User')
 
 const mongoose = require('./utilities/mongooseConfig')();
 
-const authRoute = require('./routes/auth');
+const Route = require('./routes');
 const config = require("./utilities/config").config;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: false
 }));
+app.use(express.static(path.join(__dirname, "client/build")))
 
 app.use(cors());
 
@@ -32,7 +33,7 @@ app.use((err, req, res, next) => {
 // app.get('/users/:id', authService.login)
 // app.post()
 
-app.use('/auth', authRoute);
+app.use('/auth', Route);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

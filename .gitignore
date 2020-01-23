@@ -11,5 +11,5 @@ dist/
 node_modules/
 aws-exports.js
 awsconfiguration.json
-server/.env
-server/node_modules
+package-lock.json
+server/package-lock.json

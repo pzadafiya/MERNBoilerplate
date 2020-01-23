@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { forgotpassword } from '../../store/actions';
@@ -15,19 +15,13 @@ const ForgotPasswordSchema = Yup.object().shape({
 
 
 class ForgotPassword extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            loading: true
-        }
-    }
 
     render() {
         return (
-            <div className="card rounded shadow shadow-sm">
-                <div className="bg-info">
+            <div className="card rounded shadow shadow-sm position-relative overflow-hidden">
+                <div className="bg-primary">
                     <div className="text-primary text-center p-4">
-                        <h5 className="text-white font-size-20">Forgot Password</h5>
+                        <h5 className="text-white font-size-20">Recover Account</h5>
                     </div>
                 </div>
                 <div className="card-body">
@@ -38,20 +32,21 @@ class ForgotPassword extends Component {
                         }}
                         validationSchema={ForgotPasswordSchema}
                         onSubmit={(values, { setSubmitting }) => {
-                            this.setState({ loading: true })
                             this.props.forgotpassword(values.email);
-                            this.setState({ loading: false })
                             setSubmitting(false);
                         }}
                     >
                         {({ touched, errors, isSubmitting }) => (
                             <Form>
                                 <div className="form-group">
-                                    <label htmlFor="email">Email</label>
+                                    <p>Please enter your email address. You will receive a link to create a new password via email.</p>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="email">Email Address</label>
                                     <Field
                                         type="email"
                                         name="email"
-                                        placeholder="Enter email"
+                                        placeholder="Enter Your Email Address"
                                         className={`form-control ${touched.email && errors.email ? "is-invalid" : ""}`}
                                     />
                                     <ErrorMessage
@@ -63,11 +58,10 @@ class ForgotPassword extends Component {
 
                                 <button
                                     type="submit"
-                                    className="btn btn-info btn-block"
+                                    className="btn btn-primary btn-block"
                                     disabled={isSubmitting}
-                                > {isSubmitting ? "Please wait..." : "Submit"}
+                                > {isSubmitting ? "Please wait..." : "Send"}
                                 </button>
-                                <Link to="/login" className="btn btn-link">login</Link>
                             </Form>
                         )}
                     </Formik>

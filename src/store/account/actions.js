@@ -49,7 +49,6 @@ export const register = (user) => {
 		userService.register(user)
 			.then(
 				user => {
-					debugger
 					dispatch({ type: REGISTER_SUCCESS });
 					dispatch(alertActions.showNotification("success", user.message, 3000));
 					dispatch(alertActions.removeNotification());

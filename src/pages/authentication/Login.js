@@ -22,8 +22,8 @@ class Login extends Component {
 
 	render() {
 		return (
-			<div className="card rounded shadow shadow-sm">
-				<div className="bg-info">
+			<div className="card rounded shadow shadow-sm position-relative overflow-hidden">
+				<div className="bg-primary">
 					<div className="text-primary text-center p-4">
 						<h5 className="text-white">Login</h5>
 					</div>
@@ -52,7 +52,7 @@ class Login extends Component {
 										type="email"
 										name="email"
 										placeholder="Enter email"
-										autoComplete  = "false"
+										autoComplete="false"
 										className={`form-control ${touched.email && errors.email ? "is-invalid" : ""}`}
 									/>
 									<ErrorMessage
@@ -67,7 +67,7 @@ class Login extends Component {
 									<Field
 										type="password"
 										name="password"
-										autoComplete  = "false"
+										autoComplete="false"
 										placeholder="Enter password"
 										className={`form-control ${touched.password && errors.password ? "is-invalid" : ""}`}
 									/>
@@ -80,15 +80,15 @@ class Login extends Component {
 
 								<button
 									type="submit"
-									className="btn btn-info btn-block"
+									className="btn btn-primary btn-block"
 									disabled={isSubmitting}
-								> {isSubmitting ? "Please wait..." : "Submit"}
+								> {isSubmitting ? "Please wait..." : "Sign in"}
 								</button>
-								<span>
-									<Link to="/register" className="btn btn-link">Register</Link>
-								</span>
+								
+								<p className="mb-0 mt-2"> Don't have an account?
+									<Link to="/register"> Sign Up</Link></p>
 
-								<Link to="/forgotpassword" className="btn btn-link">Forgot Password</Link>
+								<Link to="/forgotpassword">Forgot Password?</Link>
 							</Form>
 						)}
 					</Formik>

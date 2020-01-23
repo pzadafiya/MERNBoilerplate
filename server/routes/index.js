@@ -1,7 +1,7 @@
-const express = require("../node_modules/express");
+const express = require("express");
 
 const router = express.Router({ mergeParams: true });
-const authService = require("../services/auth");
+const authenticationService = require("../services/authentication");
 
 /* User Registration and login using rest api. */
 // Get /login : user login
@@ -10,15 +10,15 @@ const authService = require("../services/auth");
 // Delete /users/:id : Delete user and return deleted user object
 
 /* User Login. */
-router.get("/login", authService.login);
+router.get("/login", authenticationService.login);
 
 /* User register. */
-router.post("/register", authService.register);
+router.post("/register", authenticationService.register);
 
 /* User forgotpassword. */
-router.post("/forgotpassword", authService.forgotpassword);
+router.post("/forgotpassword", authenticationService.forgotpassword);
 
 /* User resetpassword. */
-router.put("/resetpassword", authService.resetpassword);
+router.put("/resetpassword", authenticationService.resetpassword);
 
 module.exports = router;

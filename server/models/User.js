@@ -23,6 +23,9 @@ let User = new Schema({
         trim: true,
         select: false
     },
+    phoneNumber: {
+        "type": String
+    },
     status: {
         type: Boolean,
         default: false
