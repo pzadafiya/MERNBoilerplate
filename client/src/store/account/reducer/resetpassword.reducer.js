@@ -1,13 +1,13 @@
 import { RESET_PASSWORD_REQUEST, RESET_PASSWORD_SUCCESS, RESET_PASSWORD_FAILURE } from '../constants';
 
-export function resetpassword(state = {}, action) {
+export function resetpassword(state = { loading: false }, action) {
   switch (action.type) {
     case RESET_PASSWORD_REQUEST:
-      return { resetpasswordprocessing: true };
+      return { loading: true };
     case RESET_PASSWORD_SUCCESS:
-      return {};
+      return { loading: false };
     case RESET_PASSWORD_FAILURE:
-      return {};
+      return { loading: false };
     default:
       return state
   }

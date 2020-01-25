@@ -1,13 +1,13 @@
 import { FORGOT_PASSWORD_REQUEST, FORGOT_PASSWORD_SUCCESS, FORGOT_PASSWORD_FAILURE } from '../constants';
 
-export function forgotpassword(state = {}, action) {
+export function forgotpassword(state = { loading: false }, action) {
   switch (action.type) {
     case FORGOT_PASSWORD_REQUEST:
-      return { forgotpasswording: true };
+      return { loading: true };
     case FORGOT_PASSWORD_SUCCESS:
-      return {};
+      return { loading: false };
     case FORGOT_PASSWORD_FAILURE:
-      return {};
+      return { loading: false };
     default:
       return state
   }

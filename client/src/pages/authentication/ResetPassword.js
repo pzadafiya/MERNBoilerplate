@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { resetpassword } from '../../store/actions';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from 'yup';
+import Loader from '../../components/loader';
 
 const ResetPasswordSchema = Yup.object().shape({
     password: Yup.string()
@@ -38,46 +39,50 @@ class ResetPassword extends Component {
                         }}
                     >
                         {({ touched, errors, isSubmitting }) => (
-                            <Form>
-                                <div className="form-group">
-                                    <label htmlFor="password">Password</label>
-                                    <Field
-                                        type="password"
-                                        name="password"
-                                        placeholder="Password"
-                                        autoComplete='false'
-                                        className={`form-control ${touched.password && errors.password ? "is-invalid" : ""}`}
-                                    />
-                                    <ErrorMessage
-                                        component="div"
-                                        name="password"
-                                        className="invalid-feedback"
-                                    />
-                                </div>
+                            <React.Fragment>
+                                {this.props.loading ? <Loader /> : null}
+                                
+                                <Form>
+                                    <div className="form-group">
+                                        <label htmlFor="password">Password</label>
+                                        <Field
+                                            type="password"
+                                            name="password"
+                                            placeholder="Password"
+                                            autoComplete='false'
+                                            className={`form-control ${touched.password && errors.password ? "is-invalid" : ""}`}
+                                        />
+                                        <ErrorMessage
+                                            component="div"
+                                            name="password"
+                                            className="invalid-feedback"
+                                        />
+                                    </div>
 
-                                <div className="form-group">
-                                    <label htmlFor="confirmpassword">Confirm Password</label>
-                                    <Field
-                                        type="password"
-                                        name="confirmpassword"
-                                        autoComplete='false'
-                                        placeholder="Confirm Password"
-                                        className={`form-control ${touched.confirmpassword && errors.confirmpassword ? "is-invalid" : ""}`}
-                                    />
-                                    <ErrorMessage
-                                        component="div"
-                                        name="confirmpassword"
-                                        className="invalid-feedback"
-                                    />
-                                </div>
+                                    <div className="form-group">
+                                        <label htmlFor="confirmpassword">Confirm Password</label>
+                                        <Field
+                                            type="password"
+                                            name="confirmpassword"
+                                            autoComplete='false'
+                                            placeholder="Confirm Password"
+                                            className={`form-control ${touched.confirmpassword && errors.confirmpassword ? "is-invalid" : ""}`}
+                                        />
+                                        <ErrorMessage
+                                            component="div"
+                                            name="confirmpassword"
+                                            className="invalid-feedback"
+                                        />
+                                    </div>
 
-                                <button
-                                    type="submit"
-                                    className="btn btn-primary btn-block"
-                                    disabled={isSubmitting}
-                                > {isSubmitting ? "Please wait..." : "Reset"}
-                                </button>
-                            </Form>
+                                    <button
+                                        type="submit"
+                                        className="btn btn-primary btn-block"
+                                        disabled={isSubmitting}
+                                    > {isSubmitting ? "Please wait..." : "Reset"}
+                                    </button>
+                                </Form>
+                            </React.Fragment>
                         )}
                     </Formik>
                 </div>
@@ -87,8 +92,8 @@ class ResetPassword extends Component {
 }
 
 function mapState(state) {
-    const { resetpassword } = state.account.resetpassword;
-    return { resetpassword };
+    const { loading } = state.account.resetpassword;
+    return { loading };
 }
 
 export default withRouter(connect(mapState, { resetpassword })(ResetPassword));

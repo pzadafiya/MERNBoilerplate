@@ -132,12 +132,13 @@ let forgotpassword = async (req, res) => {
       resetPasswordExpires: Date.now() + 3600000
     };
 
-    const updatedData = UserData.updateUser(criteria, dataToSet);
-
-    if (updatedData.email === "") {
+    const checkEmail = await UserData.getUsers(criteria);
+    if (checkEmail.length === 0)
       return res.status(400).json({ message: 'Email not exist!' });
-    }
-    
+
+    //update token and expire time in db
+    UserData.updateUser(criteria, dataToSet);
+
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {

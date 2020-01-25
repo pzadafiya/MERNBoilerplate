@@ -5,14 +5,11 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Notification from '../../components/notification'
 
-
 class AuthLayout extends Component {
     constructor(props) {
         super(props);
-        
-        this.state = {
-        };
     }
+
     render() {
         return (
             <React.Fragment>

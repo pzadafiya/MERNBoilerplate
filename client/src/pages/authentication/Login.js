@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { login, logout } from '../../store/actions';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from 'yup';
+import Loader from '../../components/loader';
 
 const LoginSchema = Yup.object().shape({
 	email: Yup.string()
@@ -45,51 +46,54 @@ class Login extends Component {
 						}}
 					>
 						{({ touched, errors, isSubmitting }) => (
-							<Form>
-								<div className="form-group">
-									<label htmlFor="email">Email</label>
-									<Field
-										type="email"
-										name="email"
-										placeholder="Enter email"
-										autoComplete="false"
-										className={`form-control ${touched.email && errors.email ? "is-invalid" : ""}`}
-									/>
-									<ErrorMessage
-										component="div"
-										name="email"
-										className="invalid-feedback"
-									/>
-								</div>
+							<React.Fragment>
+								{this.props.loading ? <Loader /> : null}
+								<Form>
+									<div className="form-group">
+										<label htmlFor="email">Email</label>
+										<Field
+											type="email"
+											name="email"
+											placeholder="Enter email"
+											autoComplete="false"
+											className={`form-control ${touched.email && errors.email ? "is-invalid" : ""}`}
+										/>
+										<ErrorMessage
+											component="div"
+											name="email"
+											className="invalid-feedback"
+										/>
+									</div>
 
-								<div className="form-group">
-									<label htmlFor="password">Password</label>
-									<Field
-										type="password"
-										name="password"
-										autoComplete="false"
-										placeholder="Enter password"
-										className={`form-control ${touched.password && errors.password ? "is-invalid" : ""}`}
-									/>
-									<ErrorMessage
-										component="div"
-										name="password"
-										className="invalid-feedback"
-									/>
-								</div>
+									<div className="form-group">
+										<label htmlFor="password">Password</label>
+										<Field
+											type="password"
+											name="password"
+											autoComplete="false"
+											placeholder="Enter password"
+											className={`form-control ${touched.password && errors.password ? "is-invalid" : ""}`}
+										/>
+										<ErrorMessage
+											component="div"
+											name="password"
+											className="invalid-feedback"
+										/>
+									</div>
 
-								<button
-									type="submit"
-									className="btn btn-primary btn-block"
-									disabled={isSubmitting}
-								> {isSubmitting ? "Please wait..." : "Sign in"}
-								</button>
-								
-								<p className="mb-0 mt-2"> Don't have an account?
+									<button
+										type="submit"
+										className="btn btn-primary btn-block"
+										disabled={isSubmitting}
+									> {isSubmitting ? "Please wait..." : "Sign in"}
+									</button>
+
+									<p className="mb-0 mt-2"> Don't have an account?
 									<Link to="/register"> Sign Up</Link></p>
 
-								<Link to="/forgotpassword">Forgot Password?</Link>
-							</Form>
+									<Link to="/forgotpassword">Forgot Password?</Link>
+								</Form>
+							</React.Fragment>
 						)}
 					</Formik>
 				</div>
@@ -100,8 +104,8 @@ class Login extends Component {
 
 
 function mapState(state) {
-	const { loggingIn } = state.account.authentication;
-	return { loggingIn };
+	const { loading } = state.account.authentication;
+	return { loading };
 }
 
 export default withRouter(connect(mapState, { login, logout })(Login))

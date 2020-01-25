@@ -25,6 +25,7 @@ const updateUser = (criteria, dataToSet, options = {}) =>
   new Promise((resolve, reject) => {
     options.lean = true;
     options.new = true;
+    options.useFindAndModify
     Models.findOneAndUpdate(criteria, dataToSet, options)
       .then(client => {
         resolve(client)

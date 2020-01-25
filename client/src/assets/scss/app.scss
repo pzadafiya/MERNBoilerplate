@@ -2,3 +2,20 @@
 @import "./node_modules/bootstrap/scss/variables";
 @import "variables";
 @import "./node_modules/bootstrap/scss/mixins.scss";
+
+/* loader */
+
+.loading-container {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    background: rgba(255, 255, 255, 0.6);
+    text-align: center;
+    .spinner {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}

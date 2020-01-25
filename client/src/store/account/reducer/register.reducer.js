@@ -1,13 +1,13 @@
 import { REGISTER_REQUEST, REGISTER_SUCCESS, REGISTER_FAILURE } from '../constants';
 
-export function register(state = {}, action) {
+export function register(state = { loading: false }, action) {
   switch (action.type) {
     case REGISTER_REQUEST:
-      return { registering: true };
+      return { loading: true };
     case REGISTER_SUCCESS:
-      return {};
+      return { loading: false };
     case REGISTER_FAILURE:
-      return {};
+      return { loading: false };
     default:
       return state
   }

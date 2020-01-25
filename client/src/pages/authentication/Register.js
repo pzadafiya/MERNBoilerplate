@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { register } from '../../store/actions';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from 'yup';
+import Loader from '../../components/loader';
 
 const SignupSchema = Yup.object().shape({
 
@@ -79,155 +80,158 @@ class Register extends Component {
 						}}
 					>
 						{({ touched, errors, isSubmitting }) => (
-							<Form>
-								<div className="form-group">
-									<div className="row">
-										<div className="col-12 col-md-6">
-											<label htmlFor="firstname">First Name</label>
-											<Field
-												type="firstname"
-												name="firstname"
-												placeholder="First Name"
-												className={`form-control ${touched.firstname && errors.firstname ? "is-invalid" : ""}`}
-											/>
-											<ErrorMessage
-												component="div"
-												name="firstname"
-												className="invalid-feedback"
-											/>
-										</div>
-										<div className="col-12 col-md-6">
-											<label htmlFor="lastname">Last Name</label>
-											<Field
-												type="lastname"
-												name="lastname"
-												placeholder="Last name"
-												className={`form-control ${touched.lastname && errors.lastname ? "is-invalid" : ""}`}
-											/>
-											<ErrorMessage
-												component="div"
-												name="lastname"
-												className="invalid-feedback"
-											/>
-										</div>
-									</div>
-								</div>
+							<React.Fragment>
+								{this.props.loading ? <Loader /> : null}
 
-
-
-								<div className="form-group">
-									<label htmlFor="email">Email</label>
-									<Field
-										type="email"
-										name="email"
-										placeholder="Email"
-										className={`form-control ${touched.email && errors.email ? "is-invalid" : ""}`}
-									/>
-									<ErrorMessage
-										component="div"
-										name="email"
-										className="invalid-feedback"
-									/>
-								</div>
-
-								<div className="form-group">
-									<label htmlFor="password">Password</label>
-									<Field
-										type="password"
-										name="password"
-										placeholder="Password"
-										autoComplete="false"
-										className={`form-control ${touched.password && errors.password ? "is-invalid" : ""}`}
-									/>
-									<ErrorMessage
-										component="div"
-										name="password"
-										className="invalid-feedback"
-									/>
-								</div>
-
-								<div className="form-group">
-									<label htmlFor="confirmpassword">Confirm Password</label>
-									<Field
-										type="password"
-										name="confirmpassword"
-										placeholder="Confirm Password"
-										autoComplete="false"
-										className={`form-control ${touched.confirmpassword && errors.confirmpassword ? "is-invalid" : ""}`}
-									/>
-									<ErrorMessage
-										component="div"
-										name="confirmpassword"
-										className="invalid-feedback"
-									/>
-								</div>
-
-								<div className="form-group">
-									<label htmlFor="phonenumber">Phone Number</label>
-									<Field
-										type="text"
-										name="phonenumber"
-										placeholder="Phone Number"
-										className={`form-control ${touched.phonenumber && errors.phonenumber ? "is-invalid" : ""}`}
-									/>
-									<ErrorMessage
-										component="div"
-										name="phonenumber"
-										className="invalid-feedback"
-									/>
-								</div>
-
-								<div className="form-group">
-									<div className="form-check form-check-inline">
-										<div className="form-group mb-0">
-											<div className="custom-control custom-checkbox">
+								<Form>
+									<div className="form-group">
+										<div className="row">
+											<div className="col-12 col-md-6">
+												<label htmlFor="firstname">First Name</label>
 												<Field
-													type="checkbox"
-													id="termsandcondition"
-													name="termsandcondition"
-													className={`custom-control-input ${touched.termsandcondition && errors.termsandcondition ? "is-invalid" : ""}`}
+													type="firstname"
+													name="firstname"
+													placeholder="First Name"
+													className={`form-control ${touched.firstname && errors.firstname ? "is-invalid" : ""}`}
 												/>
-												<label
-													className="custom-control-label"
-													htmlFor="termsandcondition">I Accept
-												</label>
-												<Link to="#" onClick={(e) => this.toggleModal(e, "isSimpleModalOpen")} className="text-primary cursor-pointer"> Terms And Condition</Link>
 												<ErrorMessage
 													component="div"
-													name="termsandcondition"
+													name="firstname"
 													className="invalid-feedback"
 												/>
 											</div>
-
-											<Modal isOpen={this.state.isSimpleModalOpen} toggle={(e) => this.toggleModal(e, "isSimpleModalOpen")}  >
-												<ModalHeader toggle={(e) => this.toggleModal(e, "isSimpleModalOpen")} >Terms and Conditions for MERN Boilerplate</ModalHeader>
-												<ModalBody>
-													<h5 className="font-16">Introduction</h5>
-													<p>These Website Standard Terms and Conditions written on this webpage shall manage your use of our website, <span class="highlight preview_website_name">Webiste Name</span> accessible at <span class="highlight preview_website_url">Website.com</span>.</p>
-													<p>These Terms will be applied fully and affect to your use of this Website. By using this Website, you agreed to accept all terms and conditions written in here. You must not use this Website if you disagree with any of these Website Standard Terms and Conditions.</p>
-
-												</ModalBody>
-												<ModalFooter>
-													<Button type="button" color="light" className="waves-effect" onClick={(e) => this.toggleModal(e, "isSimpleModalOpen")} >Close</Button>
-													<Button type="button" color="primary" className="waves-effect waves-light" onClick={(e) => this.toggleModal(e, "isSimpleModalOpen")}>I Agree</Button>
-												</ModalFooter>
-											</Modal>
-
+											<div className="col-12 col-md-6">
+												<label htmlFor="lastname">Last Name</label>
+												<Field
+													type="lastname"
+													name="lastname"
+													placeholder="Last name"
+													className={`form-control ${touched.lastname && errors.lastname ? "is-invalid" : ""}`}
+												/>
+												<ErrorMessage
+													component="div"
+													name="lastname"
+													className="invalid-feedback"
+												/>
+											</div>
 										</div>
 									</div>
-								</div>
 
-								<button
-									className="btn btn-primary btn-block"
-									type="submit"
-									disabled={isSubmitting}
-								>{isSubmitting ? "Please wait..." : "Register"}
-								</button>
 
-								<p className="mb-0 mt-2">Already have an account ?
+
+									<div className="form-group">
+										<label htmlFor="email">Email</label>
+										<Field
+											type="email"
+											name="email"
+											placeholder="Email"
+											className={`form-control ${touched.email && errors.email ? "is-invalid" : ""}`}
+										/>
+										<ErrorMessage
+											component="div"
+											name="email"
+											className="invalid-feedback"
+										/>
+									</div>
+
+									<div className="form-group">
+										<label htmlFor="password">Password</label>
+										<Field
+											type="password"
+											name="password"
+											placeholder="Password"
+											autoComplete="false"
+											className={`form-control ${touched.password && errors.password ? "is-invalid" : ""}`}
+										/>
+										<ErrorMessage
+											component="div"
+											name="password"
+											className="invalid-feedback"
+										/>
+									</div>
+
+									<div className="form-group">
+										<label htmlFor="confirmpassword">Confirm Password</label>
+										<Field
+											type="password"
+											name="confirmpassword"
+											placeholder="Confirm Password"
+											autoComplete="false"
+											className={`form-control ${touched.confirmpassword && errors.confirmpassword ? "is-invalid" : ""}`}
+										/>
+										<ErrorMessage
+											component="div"
+											name="confirmpassword"
+											className="invalid-feedback"
+										/>
+									</div>
+
+									<div className="form-group">
+										<label htmlFor="phonenumber">Phone Number</label>
+										<Field
+											type="text"
+											name="phonenumber"
+											placeholder="Phone Number"
+											className={`form-control ${touched.phonenumber && errors.phonenumber ? "is-invalid" : ""}`}
+										/>
+										<ErrorMessage
+											component="div"
+											name="phonenumber"
+											className="invalid-feedback"
+										/>
+									</div>
+
+									<div className="form-group">
+										<div className="form-check form-check-inline">
+											<div className="form-group mb-0">
+												<div className="custom-control custom-checkbox">
+													<Field
+														type="checkbox"
+														id="termsandcondition"
+														name="termsandcondition"
+														className={`custom-control-input ${touched.termsandcondition && errors.termsandcondition ? "is-invalid" : ""}`}
+													/>
+													<label
+														className="custom-control-label"
+														htmlFor="termsandcondition">I Accept
+												</label>
+													<Link to="#" onClick={(e) => this.toggleModal(e, "isSimpleModalOpen")} className="text-primary cursor-pointer"> Terms And Condition</Link>
+													<ErrorMessage
+														component="div"
+														name="termsandcondition"
+														className="invalid-feedback"
+													/>
+												</div>
+
+												<Modal isOpen={this.state.isSimpleModalOpen} toggle={(e) => this.toggleModal(e, "isSimpleModalOpen")}  >
+													<ModalHeader toggle={(e) => this.toggleModal(e, "isSimpleModalOpen")} >Terms and Conditions for MERN Boilerplate</ModalHeader>
+													<ModalBody>
+														<h5 className="font-16">Introduction</h5>
+														<p>These Website Standard Terms and Conditions written on this webpage shall manage your use of our website, <span class="highlight preview_website_name">Webiste Name</span> accessible at <span class="highlight preview_website_url">Website.com</span>.</p>
+														<p>These Terms will be applied fully and affect to your use of this Website. By using this Website, you agreed to accept all terms and conditions written in here. You must not use this Website if you disagree with any of these Website Standard Terms and Conditions.</p>
+
+													</ModalBody>
+													<ModalFooter>
+														<Button type="button" color="light" className="waves-effect" onClick={(e) => this.toggleModal(e, "isSimpleModalOpen")} >Close</Button>
+														<Button type="button" color="primary" className="waves-effect waves-light" onClick={(e) => this.toggleModal(e, "isSimpleModalOpen")}>I Agree</Button>
+													</ModalFooter>
+												</Modal>
+
+											</div>
+										</div>
+									</div>
+
+									<button
+										className="btn btn-primary btn-block"
+										type="submit"
+										disabled={isSubmitting}
+									>{isSubmitting ? "Please wait..." : "Register"}
+									</button>
+
+									<p className="mb-0 mt-2">Already have an account ?
 									<Link to="/login" className=""> Sign in</Link></p>
-
-							</Form>
+								</Form>
+							</React.Fragment>
 						)}
 					</Formik>
 				</div>
@@ -237,4 +241,9 @@ class Register extends Component {
 	};
 }
 
-export default withRouter(connect(null, { register })(Register));
+function mapState(state) {
+	const { loading } = state.account.register;
+	return { loading };
+}
+
+export default withRouter(connect(mapState, { register })(Register));
