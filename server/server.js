@@ -20,6 +20,10 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(express.static(path.join(__dirname, "client/build")))
 
+// app.get('*', (req, res) => {
+//   res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+// });
+
 app.use(cors());
 
 app.use((err, req, res, next) => {
@@ -33,7 +37,7 @@ app.use((err, req, res, next) => {
 // app.get('/users/:id', authService.login)
 // app.post()
 
-app.use('/auth', Route);
+app.use('/api', Route);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

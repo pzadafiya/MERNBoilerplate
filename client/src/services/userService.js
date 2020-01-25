@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseUrl = "http://localhost:3002/";
+import baseUrl from '../helpers/utils';
 
 export const userService = {
 	login,
@@ -12,7 +12,7 @@ export const userService = {
 function login(email, password) {
 	return axios({
 		method: 'get',
-		url: baseUrl + 'auth/login',
+		url: baseUrl + 'login',
 		params: {
 			email: email,
 			password: password
@@ -36,7 +36,7 @@ function register(user) {
 
 	return axios({
 		method: 'post',
-		url: baseUrl + 'auth/register',
+		url: baseUrl + 'register',
 		data: {
 			user: user
 		}
@@ -51,7 +51,7 @@ function forgotpassword(email) {
 
 	return axios({
 		method: 'post',
-		url: baseUrl + 'auth/forgotpassword',
+		url: baseUrl + 'forgotpassword',
 		data: {
 			email: email
 		}
@@ -65,7 +65,7 @@ function forgotpassword(email) {
 function resetpassword(objmodel) {
 	return axios({
 		method: 'put',
-		url: baseUrl + 'auth/resetpassword',
+		url: baseUrl + 'resetpassword',
 		data: {
 			token: objmodel.token,
 			password: objmodel.password
@@ -79,7 +79,7 @@ function resetpassword(objmodel) {
 }
 
 function handleError(response) {
-	console.log(response);
+	
 	if (response.status === 401) {
 		logout();
 		throw new Error("User is unauthorized")
