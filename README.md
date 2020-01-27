@@ -59,12 +59,6 @@ $ cd client && run command npm start
 # You can now view mern-boilerplate in the browser. http://localhost:3000/
 ```
 
-So now you can go to 
-
-* http://localhost:3002/api/: A simple API call
-* http://localhost:3002/: The website based on build (that you can update with `$ (npm run build)` )
-* http://localhost:3000/: The last version of your React application that is calling your API with the base url "http://localhost:3002/api/"
-
 ## Global information
 
 ### Directory structure
@@ -97,61 +91,34 @@ package.json
 README.md
 ```
 
-## How to implement a Full Stack feature?
-
-1. Implement it in the sever by creating a route and some models if necessary
-2. Test it with Postman with many different cases
-3. Create a new API method in `client/src/services/{exampleService}.js` 
-4. Consume the API method in your client :)
-
-## Example in the code
+**Example on the server side**
 
 ### `server/routes/index.js` 
 
 * `router.get('/login', authenticationService.login)` : Route to send the user login details
-* `router.post('/register',authenticationService.register)` : Route to create a new user
-* `router.post('/forgotpassword',authenticationService.forgotpassword)` : Route to send the user details for forgot password via email
-* `router.put('/resetpassword',authenticationService.resetpassword)` : Route to reset password
 
-
-## Guideline to create clean code
-
-### Send the right status code
-
-Your backend API sends some status code at every request. By default, it will send `200` , which means `OK` , everything went fine.
-
-If something bad happened, you should a send a different status code:
-
-### Successful
-
-* ** `200` OK**: The 200 status code is by far the most common returned. It means, simply, that the request was received and understood and is being processed.
-
-### Redirection 
-
-* ** `300` Multiple Choice**: The 300 status code indicates that a resource has moved. The response will also include a list of locations from which the user agent can select the most appropriate
-
-### Client Error
-
-* ** `400` Bad Request**: Something is missing in wrong in the request (eg: missing data).
-* ** `401` Unauthorized**: For missing or bad authentication.
-* ** `403` Forbidden**: A 403 status code indicates that the client cannot access the requested resource. That might mean that the wrong username and password were sent in the  request.
-* ** `404` Not Found**: The resources/route doesn't exist.
-* ** `409` Conflict**: The request couldn't be completed because of a conflict (eg for signup: username already taken).
-
-### Server Error
-
-* ** `500` Internal Server Error**: The server encountered an unexpected condition which prevented it from fulfilling the request.
-
-By sending the right status code, you will catch more easily your error on the client side.
-
-**Example on the server side**
+### `server/service/authentication.js` 
 
 ``` js
-// If the user provide wrong username or password then  we can write like this
-res.status(409).json({
-    message: "Incorrect password"
-})
+let login = async (req, res) => {
+    // validate req parameter and check in db if credential valid then return response like below.
+    // fetch user data and set to data
+    if (isValid && data.length == 1)
+        return res.status(200).json({
+            message: 'Logged in successfully!',data:data
+        });
+    else
+        return res.status(403).json({
+            message: 'Incorrect password'
+        });
+};
 ```
+
+### Send the status code
+
+Your backend API sends some status code at every request. By default, it will send `200` , which means `OK` , everything went fine.
+If something bad happened, you should a send a different status code: like `400` Bad Request, `404` Not Found, `500` Internal Server Error
+By sending the right status code, you will catch more easily your error on the client side.
 
 **Example on the client side**
 
@@ -170,7 +137,7 @@ return axios({
     }
 }).then((user) => {
     // store user details in local storage to keep user logged in between page refreshes
-    localStorage.setItem('user', JSON.stringify(user.data));
+    sessionStorage.setItem('user', JSON.stringify(user.data));
     return user.data;
 }).catch((error) => {
     handleError(error.response)

@@ -1,7 +1,9 @@
 const UserData = require('../data/userData');
 const MD5 = require('md5');
 const nodemailer = require('nodemailer');
-const crypto = require('crypto');
+// const crypto = require('crypto');
+
+const randomBytes = require('randombytes');
 const Joi = require('@hapi/joi');
 require('dotenv').config();
 
@@ -126,7 +128,7 @@ let forgotpassword = async (req, res) => {
       status: true
     };
 
-    const token = crypto.randomBytes(20).toString('hex');
+    const token = randomBytes(20).toString('hex');
     const dataToSet = {
       resetPasswordToken: token,
       resetPasswordExpires: Date.now() + 3600000

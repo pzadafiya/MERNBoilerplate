@@ -11,7 +11,5 @@ module.exports = function() {
     mongoose.connection.once('open', function() {
         console.log("MongoDB database connection established successfully");
     });
-    
-
     return db;
 };

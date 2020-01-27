@@ -26,20 +26,22 @@ class ForgotPassword extends Component {
 
                 <div className="card-body ">
                     <Formik
+                        enableReinitialize
                         initialValues={{
                             email: "",
                             password: ""
                         }}
                         validationSchema={ForgotPasswordSchema}
-                        onSubmit={(values, { setSubmitting }) => {
+                        onSubmit={(values, { setSubmitting, resetForm }) => {
                             this.props.forgotpassword(values.email);
                             setSubmitting(false);
+                            resetForm();
                         }}
                     >
                         {({ touched, errors, isSubmitting }) => (
                             <React.Fragment>
                                 {this.props.loading ? <Loader /> : null}
-                                
+
                                 <Form>
                                     <div className="form-group">
                                         <p>Please enter your email address. You will receive a link to create a new password via email.</p>

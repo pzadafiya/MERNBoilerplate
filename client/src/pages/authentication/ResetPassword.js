@@ -31,17 +31,19 @@ class ResetPassword extends Component {
                         }}
                         validationSchema={ResetPasswordSchema}
 
-                        onSubmit={(values, { setSubmitting }) => {
+                        onSubmit={(values, { setSubmitting, resetForm }) => {
                             const token = this.props.match.params.token;
                             const password = values.password;
                             this.props.resetpassword({ token, password });
                             setSubmitting(false);
+                            resetForm();
                         }}
                     >
-                        {({ touched, errors, isSubmitting }) => (
+                        {({ touched, errors, isSubmitting, handleReset }) => (
                             <React.Fragment>
                                 {this.props.loading ? <Loader /> : null}
-                                
+                                {this.props.loading ? handleReset.call : null}
+
                                 <Form>
                                     <div className="form-group">
                                         <label htmlFor="password">Password</label>
