@@ -1,7 +1,9 @@
+"use strict";
+
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-let User = new Schema({
+let user = new Schema({
     firstName: {
         type: String,
         trim: true,
@@ -41,8 +43,13 @@ let User = new Schema({
     resetPasswordExpires: {
         type: Date,
         default: null
-    }
+    },
+    registrationToken: {
+        type: String,
+        default: null
+    },
+    
 });
 
 
-module.exports = mongoose.model('User', User);
+module.exports = mongoose.model('user', user);

@@ -23,13 +23,14 @@ $ git remote add origin <https://github.com/user/my-react-app.git>
 You should have a `server/.env` file, with for example the following values:
 
 ``` 
-
 # .env
-NODE_SERVER = http://localhost
+NODE_ENV= development //you can change to production when needed.
 NODE_SERVER_PORT=3002
-MONGO_DB_URL = mongodb://127.0.0.1:27017/MERNBoilerplate
+NODE_SERVER_PRODUCTION_URL = anyValue (your production server URL)
+NODE_SERVER_DEVELOPMENT_URL = http://localhost:3000
+MONGO_DB_URL = mongodb://localhost:27017/MERNBoilerplate
 
-# set you nodemailer email and password here
+# set your nodemailer email and password here
 EMAIL_ADDRESS = anyValue
 EMAIL_PASSWORD = anyValue
 
@@ -64,31 +65,34 @@ $ cd client && run command npm start
 ### Directory structure
 
 ``` 
-client/
-    build/
-    public/
-    src/
-        assets/
-        components/
-        helpers/
-        pages/
+MERNBoilerplate
+    client/
+        build/
+        node_modules/
+        public/
+        src/
+            assets/
+            components/
+            helpers/
+            pages/
+            store/
+            App.js
+            App.scss
+            index.js
+            routes.js
+            serviceWorker.js
+        package.json
+    server/
+        models/
+        node_modules/
+        routes/
         services/
-        store/
-        App.js
-        App.scss
-        index.js
-        routes.js
-    package.json
-server/
-    data/
-    models/
-    routes/
-    services/
-    utilities/
-    package.json
-.gitignore
-package.json
-README.md
+        utilities/
+        package.json
+        server.js
+    .gitignore
+    README.md
+
 ```
 
 **Example on the server side**
@@ -104,9 +108,7 @@ let login = async (req, res) => {
     // validate req parameter and check in db if credential valid then return response like below.
     // fetch user data and set to data
     if (isValid && data.length == 1)
-        return res.status(200).json({
-            message: 'Logged in successfully!',data:data
-        });
+        return res.status(200).json({data[0]});
     else
         return res.status(403).json({
             message: 'Incorrect password'

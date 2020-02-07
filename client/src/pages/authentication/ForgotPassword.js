@@ -7,7 +7,8 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from 'yup';
 import Loader from '../../components/loader';
 
-const ForgotPasswordSchema = Yup.object().shape({
+//Schema defined using YUP for form validation 
+const forgotPasswordSchema = Yup.object().shape({
     email: Yup.string()
         .email('Email is invalid')
         .required('Email is required')
@@ -31,11 +32,13 @@ class ForgotPassword extends Component {
                             email: "",
                             password: ""
                         }}
-                        validationSchema={ForgotPasswordSchema}
-                        onSubmit={(values, { setSubmitting, resetForm }) => {
-                            this.props.forgotpassword(values.email);
+                        validationSchema={forgotPasswordSchema}
+                        onSubmit={(values, { setSubmitting }) => {
+                            this.props.forgotpassword(
+                                values.email,
+                                this.props.history
+                            );
                             setSubmitting(false);
-                            resetForm();
                         }}
                     >
                         {({ touched, errors, isSubmitting }) => (
@@ -43,6 +46,8 @@ class ForgotPassword extends Component {
                                 {this.props.loading ? <Loader /> : null}
 
                                 <Form>
+                                    {/*START : forgot password form */}
+
                                     <div className="form-group">
                                         <p>Please enter your email address. You will receive a link to create a new password via email.</p>
                                     </div>
@@ -67,6 +72,7 @@ class ForgotPassword extends Component {
                                         disabled={isSubmitting}
                                     > {isSubmitting ? "Please wait..." : "Send"}
                                     </button>
+                                     {/*END : forgot password form */}
                                 </Form>
                             </React.Fragment>)}
                     </Formik>
@@ -76,6 +82,7 @@ class ForgotPassword extends Component {
     }
 }
 
+/* Redux mapping */
 function mapState(state) {
     const { loading } = state.account.forgotpassword;
     return { loading };

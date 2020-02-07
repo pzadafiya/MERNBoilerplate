@@ -1,14 +1,16 @@
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { resetpassword } from '../../store/actions';
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { withRouter } from 'react-router-dom';
 import * as Yup from 'yup';
 import Loader from '../../components/loader';
+import { resetpassword } from '../../store/actions';
 
-const ResetPasswordSchema = Yup.object().shape({
+//Schema defined using YUP for form validation 
+const resetPasswordSchema = Yup.object().shape({
     password: Yup.string()
-        .required('password is required'),
+        .required('password is required')
+        .matches('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])', 'password not valid'),
     confirmpassword: Yup.string()
         .oneOf([Yup.ref('password'), null], 'Password must match')
         .required('Confirm password required')
@@ -20,7 +22,7 @@ class ResetPassword extends Component {
             <div className="card rounded shadow shadow-sm position-relative overflow-hidden">
                 <div className="bg-primary">
                     <div className="text-primary text-center p-4">
-                        <h5 className="text-white font-size-20">Reset Password</h5>
+                        <h5 className="text-white">Reset Password</h5>
                     </div>
                 </div>
                 <div className="card-body">
@@ -29,22 +31,26 @@ class ResetPassword extends Component {
                             password: "",
                             confirmpassword: ""
                         }}
-                        validationSchema={ResetPasswordSchema}
+                        validationSchema={resetPasswordSchema}
+                        onSubmit={(values, { setSubmitting }) => {
 
-                        onSubmit={(values, { setSubmitting, resetForm }) => {
                             const token = this.props.match.params.token;
                             const password = values.password;
-                            this.props.resetpassword({ token, password });
+
+                            this.props.resetpassword(
+                                token,
+                                password,
+                                this.props.history
+                            );
+
                             setSubmitting(false);
-                            resetForm();
                         }}
                     >
-                        {({ touched, errors, isSubmitting, handleReset }) => (
+                        {({ touched, errors, isSubmitting }) => (
                             <React.Fragment>
                                 {this.props.loading ? <Loader /> : null}
-                                {this.props.loading ? handleReset.call : null}
-
                                 <Form>
+                                    {/*START : reset password form */}
                                     <div className="form-group">
                                         <label htmlFor="password">Password</label>
                                         <Field
@@ -83,6 +89,7 @@ class ResetPassword extends Component {
                                         disabled={isSubmitting}
                                     > {isSubmitting ? "Please wait..." : "Reset"}
                                     </button>
+                                    {/*END : reset password form */}
                                 </Form>
                             </React.Fragment>
                         )}
@@ -93,9 +100,10 @@ class ResetPassword extends Component {
     }
 }
 
+/* Redux mapping */
 function mapState(state) {
     const { loading } = state.account.resetpassword;
     return { loading };
 }
 
-export default withRouter(connect(mapState, { resetpassword })(ResetPassword));
+export default withRouter(connect(mapState, { resetpassword })(ResetPassword))

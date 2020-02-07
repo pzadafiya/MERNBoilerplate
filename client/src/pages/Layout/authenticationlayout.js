@@ -1,18 +1,16 @@
 
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-
 import { connect } from 'react-redux';
-import Notification from '../../components/notification'
+import { withRouter } from 'react-router-dom';
+import Notification from '../../components/notification';
 
 class AuthLayout extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return (
             <React.Fragment>
+                {/* if there is data in props.alert.messageInfo than pass it to Notification component  
+                    so this component display message based on data.
+                 */}
                 {this.props.alert && this.props.alert.messageInfo ?
                     <Notification {...this.props.alert.messageInfo} /> : null
                 }
@@ -21,6 +19,7 @@ class AuthLayout extends Component {
                         <div className="col-md-12 min-vh-100 d-flex flex-column justify-content-center">
                             <div className="row">
                                 <div className="col-lg-6 col-md-8 mx-auto">
+                                    {/* child component render here*/}
                                     {this.props.children}
                                 </div>
                             </div>
@@ -32,6 +31,7 @@ class AuthLayout extends Component {
     }
 }
 
+/* Redux mapping */
 function mapState(state) {
     const { alert } = state;
     return { alert };

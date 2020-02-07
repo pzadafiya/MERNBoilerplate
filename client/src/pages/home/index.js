@@ -1,39 +1,67 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
-import Notification from '../../components/notification'
+import { withRouter } from 'react-router-dom';
+import { Breadcrumb, BreadcrumbItem, Jumbotron } from 'reactstrap';
 
 class Home extends Component {
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			showNotification: false
-		}
-
-		this.homeclick = this.homeclick.bind(this);
-	}
-
-	homeclick = () => {
-		 this.setState({showNotification: true});
-	}
 
 	render() {
 		return (
-			<div className="text-center">
+			<div className="container-fluid mt-4">
+				<Breadcrumb>
+					<BreadcrumbItem active>Home</BreadcrumbItem>
+				</Breadcrumb>
 
-				{this.state.showNotification ? <Notification message_type='success' message='Home button clicked' /> : null}
+				<div className="row">
+					<div className="col-12">
+						<div className="card-box">
+							<div className="row">
+								<div className="col-12">
+									<Jumbotron>
+										<h3 className="display-5">Welcome {this.props.user.firstName}!</h3>
+										<p className="lead">
+											Hi there,
+										</p>
 
-				<h2>Login Successful!</h2>
-				<h3>Welcome {this.props.user.data[0].firstName} </h3>
-				<button type="button" className="btn btn-primary" onClick={this.homeclick} >Home</button>
-				<Link className="dropdown-item" to="/login">Logout</Link>
+										<p className="lead">
+											Welcome to the React authentication!
+										</p>
+
+										<p className="lead">
+											This application is developed for the MERN(MongoDB, ExpressJS, ReactJS, NodeJS) backend purpose only, You can modify UI completely based on your perspectives.This is kind of the boilorplate for any MERN application with in -built function of user authentication such as,
+										</p>
+
+										<ul className="lead">
+											<li> User Registration</li>
+											<li> Email confirmation</li>
+											<li> Login </li>
+											<li> Forgot Password </li>
+											<li> User profile Update</li>
+											<li> Change Password</li>
+										</ul>
+
+										<p className="lead">
+											The developer can customize front end as well as back end, it completely based on their preference and we would love to provide support and guidance.
+										</p>
+
+										<p className="lead">
+											Thank You
+										</p>
+
+									</Jumbotron>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		)
 	}
 }
 
+/* Redux mapping */
 function mapState(state) {
+	//get data from authentication store
 	const { user } = state.account.authentication;
 	return { user };
 }

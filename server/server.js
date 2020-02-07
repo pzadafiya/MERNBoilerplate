@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Module dependencies.
  */
@@ -7,12 +9,10 @@ const path = require('path');
 const server = require('http').Server(app);
 const bodyParser = require('body-parser');
 const cors = require('cors');
-var User = require('./models/User')
-
-const mongoose = require('./utilities/mongooseConfig')();
-
 const Route = require('./routes');
 const config = require("./utilities/config").config;
+
+require('./utilities/mongooseConfig')();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -29,11 +29,6 @@ app.use((err, req, res, next) => {
     "statusMessage": "Something went wrong"
   });
 });
-
-// app.put()
-// app.delete()
-// app.get('/users/:id', authService.login)
-// app.post()
 
 app.use('/api', Route);
 

@@ -1,5 +1,6 @@
 import { RESET_PASSWORD_REQUEST, RESET_PASSWORD_SUCCESS, RESET_PASSWORD_FAILURE } from '../constants';
 
+//This resetpassword reducer function is used for handle action and return state.
 export function resetpassword(state = { loading: false }, action) {
   switch (action.type) {
     case RESET_PASSWORD_REQUEST:

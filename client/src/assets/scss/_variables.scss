@@ -2,6 +2,47 @@
 //
 // Variables should follow the `$component-state-property-size` formula for
 // consistent naming. Ex: $nav-link-disabled-color and $modal-content-box-shadow-xs.
+//Background left-sidebar
+$bg-leftbar-light:#ffffff; //beige; // whitesmoke; // #ffffff;
+$bg-leftbar-dark: #363c4a;
+// Leftbar width
+$leftbar-width: 240px;
+$leftbar-width-collapsed: 70px;
+// Small Leftbar Width
+$leftbar-width-sm: 160px;
+// Boxed layout width
+$boxed-layout-width: 1300px;
+$boxed-body-bg: #f8f3ef;
+//Menu item colors
+$menu-item: #6e768e;
+$menu-item-hover: #141a21;
+$menu-item-active:$blue;
+$menu-sub-item-active:$blue;
+$menu-item-active-bg: #f5f8fb;
+// Dark leftbar menu color
+$menu-item-color-dark: $gray-200;
+$menu-item-hover-color-dark:$gray-200;
+$menu-item-active-color-dark: #ffffff;
+$menu-item-active-bg-dark: #3c4352;
+//Rightbar bg
+$bg-rightbar: #fff;
+//Rightbar Width
+$rightbar-width: 260px;
+//Topbar Background
+$bg-topbar-light:$blue; //#007bff; //$gray-200; //whitesmoke; // #d1d5ea;
+// Topbar Height
+$topbar-height: 70px;
+// Secondary font
+$font-family-secondary: 'Roboto',
+sans-serif;
+// Font weight
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+// Dropdown Large
+$dropdown-lg-width: 320px;
+// Logo Display
+$logo-dark-display: block;
+$logo-light-display: none;
 // Color system
 $white: #fff;
 $gray-100: #f8f9fa;
@@ -859,4 +900,4 @@ sticky;
 // Printing
 $print-page-size: a3;
 $print-body-min-width: map-get($grid-breakpoints,
-"lg");
+"lg")

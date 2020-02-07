@@ -1,24 +1,26 @@
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { login, logout } from '../../store/actions';
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Link, withRouter } from 'react-router-dom';
 import * as Yup from 'yup';
 import Loader from '../../components/loader';
+import { login, logout, resendverificationlink } from '../../store/actions';
 
-const LoginSchema = Yup.object().shape({
+//Schema defined using YUP for form validation 
+const loginSchema = Yup.object().shape({
 	email: Yup.string()
 		.email('Email is invalid')
 		.required('Email is required'),
 	password: Yup.string()
 		.min(6, 'Password must be at least 6 characters')
+		.matches('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])', 'password not valid')
 		.required('Password is required')
 });
 
 class Login extends Component {
-	constructor(props) {
-		super(props);
-		this.props.logout();
+	//This is the function that sends email verification link 
+	ReSendVerificationLink = (email) => {
+		this.props.resendverificationlink(email)
 	}
 
 	render() {
@@ -35,7 +37,7 @@ class Login extends Component {
 							email: "",
 							password: ""
 						}}
-						validationSchema={LoginSchema}
+						validationSchema={loginSchema}
 						onSubmit={(values, { setSubmitting }) => {
 							this.props.login(
 								values.email,
@@ -45,10 +47,11 @@ class Login extends Component {
 							setSubmitting(false);
 						}}
 					>
-						{({ touched, errors, isSubmitting }) => (
+						{({ values, touched, errors, isSubmitting }) => (
 							<React.Fragment>
 								{this.props.loading ? <Loader /> : null}
 								<Form>
+									{/*START : Login form */}
 									<div className="form-group">
 										<label htmlFor="email">Email</label>
 										<Field
@@ -88,10 +91,19 @@ class Login extends Component {
 									> {isSubmitting ? "Please wait..." : "Sign in"}
 									</button>
 
+									{this.props.isVerifiedUser === false ?
+										<button
+											type="button"
+											className="btn btn-link"
+											onClick={() => this.ReSendVerificationLink(values.email)}>
+											Re-send verification link
+											</button> : null}
+
 									<p className="mb-0 mt-2"> Don't have an account?
 									<Link to="/register"> Sign Up</Link></p>
-
 									<Link to="/forgotpassword">Forgot Password?</Link>
+
+									{/*END : Login form */}
 								</Form>
 							</React.Fragment>
 						)}
@@ -102,10 +114,10 @@ class Login extends Component {
 	}
 }
 
-
+/* Redux mapping */
 function mapState(state) {
-	const { loading } = state.account.authentication;
-	return { loading };
+	const { loading, isVerifiedUser } = state.account.authentication;
+	return { loading, isVerifiedUser };
 }
 
-export default withRouter(connect(mapState, { login, logout })(Login))
+export default withRouter(connect(mapState, { login, logout, resendverificationlink })(Login))

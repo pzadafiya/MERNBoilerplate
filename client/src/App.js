@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { withRouter, Switch, BrowserRouter as Router } from 'react-router-dom';
-import routes from './routes';
+import { BrowserRouter as Router, Switch, withRouter } from 'react-router-dom';
 import './App.scss';
-import { Layout } from './pages/Layout/layout';
+import { Layout } from './pages/layout/layout';
+import routes from './routes';
 
+// This is the function which manage layout based on routes
 const withLayout = (objRoute) => {
   return class extends React.Component {
     render() {

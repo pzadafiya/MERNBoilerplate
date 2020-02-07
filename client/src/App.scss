@@ -1,2 +1,37 @@
 @import './assets/scss/bootstrap.scss';
+@import './assets/scss/icons.scss';
 @import './assets/scss/app.scss';
+
+/* loader */
+
+.loading-container {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    background: rgba(255, 255, 255, 0.6);
+    text-align: center;
+    .spinner {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
+.post-content-form-div {
+    border: 1px solid #ced4da;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.toggle-menu {
+    font-size: 20px;
+    padding: 0 15px;
+    color: #000;
+    display: block;
+    line-height: 70px;
+    text-align: center;
+}

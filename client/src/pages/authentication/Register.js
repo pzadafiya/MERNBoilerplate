@@ -1,14 +1,14 @@
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import React, { Component } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { register } from '../../store/actions';
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Link, withRouter } from 'react-router-dom';
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import * as Yup from 'yup';
 import Loader from '../../components/loader';
+import { register } from '../../store/actions';
 
-const SignupSchema = Yup.object().shape({
-
+//Schema defined using YUP for form validation 
+const signupSchema = Yup.object().shape({
 	firstname: Yup.string()
 		.required('First name is required'),
 	lastname: Yup.string()
@@ -18,7 +18,7 @@ const SignupSchema = Yup.object().shape({
 		.required('Email is required'),
 	password: Yup.string()
 		.min(6, 'Password must be at least 6 characters')
-		// .matches(/[a-z]{2}\d{2}[A-Z]{2}\d{4}$/i, 'invalid password')
+		.matches('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])', 'password not valid')
 		.required('Password is required'),
 	confirmpassword: Yup.string()
 		.oneOf([Yup.ref('password'), null], 'Password must match')
@@ -65,7 +65,7 @@ class Register extends Component {
 							termsandcondition: false
 						}}
 
-						validationSchema={SignupSchema}
+						validationSchema={signupSchema}
 						onSubmit={(values, { setSubmitting }) => {
 							this.props.register(
 								{
@@ -74,8 +74,9 @@ class Register extends Component {
 									'lastname': values.lastname,
 									'password': values.password,
 									'phonenumber': values.phonenumber,
-									'termsandcondition': values.termsandcondition
-								});
+									'termsandcondition': values.termsandcondition,
+								}, this.props.history);
+
 							setSubmitting(false);
 						}}
 					>
@@ -84,6 +85,7 @@ class Register extends Component {
 								{this.props.loading ? <Loader /> : null}
 
 								<Form>
+									{/*START : register form */}
 									<div className="form-group">
 										<div className="row">
 											<div className="col-12 col-md-6">
@@ -207,13 +209,13 @@ class Register extends Component {
 													<ModalHeader toggle={(e) => this.toggleModal(e, "isSimpleModalOpen")} >Terms and Conditions for MERN Boilerplate</ModalHeader>
 													<ModalBody>
 														<h5 className="font-16">Introduction</h5>
-														<p>These Website Standard Terms and Conditions written on this webpage shall manage your use of our website, <span class="highlight preview_website_name">Webiste Name</span> accessible at <span class="highlight preview_website_url">Website.com</span>.</p>
+														<p>These Website Standard Terms and Conditions written on this webpage shall manage your use of our website, <span className="highlight preview_website_name">Webiste Name</span> accessible at <span className="highlight preview_website_url">Website.com</span>.</p>
 														<p>These Terms will be applied fully and affect to your use of this Website. By using this Website, you agreed to accept all terms and conditions written in here. You must not use this Website if you disagree with any of these Website Standard Terms and Conditions.</p>
 
 													</ModalBody>
 													<ModalFooter>
-														<Button type="button" color="light" className="waves-effect" onClick={(e) => this.toggleModal(e, "isSimpleModalOpen")} >Close</Button>
-														<Button type="button" color="primary" className="waves-effect waves-light" onClick={(e) => this.toggleModal(e, "isSimpleModalOpen")}>I Agree</Button>
+														<Button type="button" color="light" onClick={(e) => this.toggleModal(e, "isSimpleModalOpen")} >Close</Button>
+														<Button type="button" color="primary" onClick={(e) => this.toggleModal(e, "isSimpleModalOpen")}>I Agree</Button>
 													</ModalFooter>
 												</Modal>
 
@@ -230,6 +232,8 @@ class Register extends Component {
 
 									<p className="mb-0 mt-2">Already have an account ?
 									<Link to="/login" className=""> Sign in</Link></p>
+									
+									{/*END: register form */}
 								</Form>
 							</React.Fragment>
 						)}
@@ -241,6 +245,7 @@ class Register extends Component {
 	};
 }
 
+/* Redux mapping */
 function mapState(state) {
 	const { loading } = state.account.register;
 	return { loading };

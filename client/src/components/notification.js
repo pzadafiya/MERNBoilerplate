@@ -1,22 +1,26 @@
 import { Component } from 'react';
 import { toast, Slide, Zoom, Flip, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import PropTypes from 'prop-types';
 
 // Call it once in your app. At the root of your app is the best place
 toast.configure();
 
 class Notifications extends Component {
     componentDidMount() {
+        // call this function to display notification
         this.renderToast();
     }
 
     componentDidUpdate() {
+        // call this function to display notification
         this.renderToast();
     }
 
+    // This is the function to get Tost Transition like bounce, zoom or slide. 
     getToastTransition = () => {
-        var transType = this.props.transitionType !== undefined ? this.props.transitionType : "bounce";
-
+        // you can pass transType value via props like message_type, message or hideDuration
+        var transType = "bounce";
         switch (transType.toLowerCase()) {
             case 'bounce':
                 return Bounce;
@@ -31,6 +35,7 @@ class Notifications extends Component {
         }
     }
 
+    //This is the function to get Toast Type  like success, error or info from message_type props.
     getToastType = () => {
         var toastType = this.props.message_type;
         switch (toastType.toLowerCase()) {
@@ -47,6 +52,7 @@ class Notifications extends Component {
         }
     }
 
+    //This is the function that runs when Notification Component load.
     renderToast = () => {
         var message = this.props.message;
 
@@ -63,7 +69,7 @@ class Notifications extends Component {
             transition: this.getToastTransition(),
             progressClassName: "toast-progress",
             hideProgressBar: isProgressBarhide,
-            type: this.getToastType(),//toast.TYPE.SUCCESS
+            type: this.getToastType(),
             closeButton: isAddCloseBtn,
             autoClose: isAutoClose && !isNaN(showDuration) ? parseInt(showDuration) : false,
             newestOnTop: isnewestOnTop
@@ -78,5 +84,12 @@ class Notifications extends Component {
         )
     }
 }
+
+// define your prop validations
+Notifications.propTypes = {
+    message_type: PropTypes.string,
+    message: PropTypes.string,
+    hideDuration: PropTypes.number
+};
 
 export default Notifications;

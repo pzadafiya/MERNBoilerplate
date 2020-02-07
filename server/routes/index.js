@@ -1,24 +1,33 @@
-const express = require("express");
+"use strict";
 
+const express = require("express");
 const router = express.Router({ mergeParams: true });
 const authenticationService = require("../services/authentication");
 
-/* User Registration and login using rest api. */
-// Get /login : user login
-// Post /register : create new user and return new crated user object
-// Put /resetpassword/ : update user password and return user object
-// Delete /users/:id : Delete user and return deleted user object
-
-/* User Login. */
+// Authentication Routes
+/* User login. */
 router.get("/login", authenticationService.login);
 
 /* User register. */
 router.post("/register", authenticationService.register);
 
-/* User forgotpassword. */
+/* User forgot password. */
 router.post("/forgotpassword", authenticationService.forgotpassword);
 
-/* User resetpassword. */
+/* User reset password. */
 router.put("/resetpassword", authenticationService.resetpassword);
+
+/* User update profile. */
+router.put("/updateprofile", authenticationService.updateprofile);
+
+/* User change password. */
+router.put("/changepassword", authenticationService.changepassword);
+
+/* User verify account. */
+router.put("/verifyaccount", authenticationService.verifyaccount);
+
+/* Re-send Verification Link. */
+router.put("/resendverificationlink", authenticationService.resendverificationlink);
+
 
 module.exports = router;
