@@ -1,5 +1,5 @@
 import { all, call, fork, put, takeEvery, takeLatest } from 'redux-saga/effects';
-import { axiosGet, axiosPost, axiosPut } from '../../helpers/apiUtils';
+import { axiosGet, axiosPost, axiosPut, axiosPutWithAuthHeader, axiosPostWithAuthHeader } from '../../helpers/apiUtils';
 import { alertActions } from '../alert/actions';
 import { CHANGE_PASSWORD_FAILURE, CHANGE_PASSWORD_REQUEST, CHANGE_PASSWORD_SUCCESS, FORGOT_PASSWORD_FAILURE, FORGOT_PASSWORD_REQUEST, FORGOT_PASSWORD_SUCCESS, LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, LOGOUT, REGISTER_FAILURE, REGISTER_REQUEST, REGISTER_SUCCESS, RESET_PASSWORD_FAILURE, RESET_PASSWORD_REQUEST, RESET_PASSWORD_SUCCESS, UPDATE_PROFILE_FAILURE, UPDATE_PROFILE_REQUEST, UPDATE_PROFILE_SUCCESS, VERIFY_ACCOUNT_REQUEST, VERIFY_ACCOUNT_SUCCESS, VERIFY_ACCOUNT_FAILURE, RESEND_VERIFICATION_LINK_REQUEST, RESEND_VERIFICATION_LINK_SUCCESS, RESEND_VERIFICATION_LINK_FAILURE } from './constants';
 
@@ -16,8 +16,9 @@ function* loginUser({ payload: { email, password, history } }) {
         if (response.status === 200 && response.statusText === "OK") {
             // handle success
             //store data in sessionStorage
-            sessionStorage.setItem('user', JSON.stringify(response.data));
-            yield put({ type: LOGIN_SUCCESS, user: response.data });
+            const userResponse = response.data;
+            sessionStorage.setItem('user', JSON.stringify({ user: userResponse.data, token: userResponse.token }));
+            yield put({ type: LOGIN_SUCCESS, user: userResponse.data });
             history.push('/');
         }
     } catch (e) {
@@ -138,12 +139,18 @@ function* updateProfileUser({ payload: { user, history } }) {
             lastname: user.lastname,
             phonenumber: user.phonenumber
         };
-        const response = yield call(axiosPut, 'updateprofile', params);
+        
+        const response = yield call(axiosPostWithAuthHeader, 'updateprofile', params);
 
         if (response.status === 200 && response.statusText === "OK") {
             // handle success
             //store data in sessionStorage
-            sessionStorage.setItem('user', JSON.stringify(response.data));
+            const user = JSON.parse(sessionStorage.getItem('user'));
+            let token = "";
+            if (user && user.token)
+                token = user.token;
+
+            sessionStorage.setItem('user', JSON.stringify({ user: response.data, token: token }));
             yield put({ type: UPDATE_PROFILE_SUCCESS, user: response.data });
             yield put(alertActions.showNotification("success", "Profile updated successfully", 3000));
 
@@ -170,7 +177,7 @@ function* changePasswordUser({ payload: { user, history } }) {
             currentpassword: user.currentpassword,
             newpassword: user.newpassword
         };
-        const response = yield call(axiosPut, 'changepassword', params);
+        const response = yield call(axiosPostWithAuthHeader, 'changepassword', params);
 
         if (response.status === 200 && response.statusText === "OK") {
             // handle success

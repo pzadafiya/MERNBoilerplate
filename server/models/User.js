@@ -1,8 +1,10 @@
 "use strict";
 
+
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+// Define the MongoDB schema for the people collection
 let user = new Schema({
     firstName: {
         type: String,

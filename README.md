@@ -42,7 +42,7 @@ EMAIL_PASSWORD = anyValue
 # Install server and client packages + build the React applicatin
 $ npm install
 
-# OR you can install manually the server and client packages
+#  you have to install server and client packages
 $ (cd server && npm install)
 $ (cd client && npm install)
 ```
@@ -90,7 +90,6 @@ MERNBoilerplate
         utilities/
         package.json
         server.js
-    .gitignore
     README.md
 
 ```
@@ -139,7 +138,7 @@ return axios({
     }
 }).then((user) => {
     // store user details in local storage to keep user logged in between page refreshes
-    sessionStorage.setItem('user', JSON.stringify(user.data));
+    sessionStorage.setItem('user', JSON.stringify({ user: user.data, token: token }));
     return user.data;
 }).catch((error) => {
     handleError(error.response)

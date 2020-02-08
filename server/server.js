@@ -3,6 +3,7 @@
 /**
  * Module dependencies.
  */
+
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -20,22 +21,25 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(express.static(path.join(__dirname, "client/build")))
-
 app.use(cors());
-
-app.use((err, req, res, next) => {
-  return res.send({
-    "statusCode": 401,
-    "statusMessage": "Something went wrong"
-  });
-});
-
 app.use('/api', Route);
 
-// catch 404 and forward to error handler
-app.use((req, res, next) => {
-  next();
+// express doesn't consider not found 404 as an error so we need to handle 404 explicitly
+// handle 404 error
+app.use(function (req, res, next) {
+  let err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
+
+// handle errors
+app.use(function (err, req, res, next) {
+  if (err.status === 404)
+    res.status(404).json({ message: "Not found" });
+  else
+    res.status(500).json({ message: "Something looks wrong :( !!!" });
+});
+
 
 /**
  * Start Express server.

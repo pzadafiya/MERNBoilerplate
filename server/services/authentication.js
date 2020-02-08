@@ -9,6 +9,7 @@ require('dotenv').config();
 const dbOperation = require('../utilities/dbOperation');
 const userModel = require("../models/user");
 var config = require("../Utilities/config").config;
+const jwt = require('jsonwebtoken');
 
 /* API to login user */
 let login = async (req, res) => {
@@ -45,12 +46,14 @@ let login = async (req, res) => {
     if (data && data.length === 0)
       return res.status(403).json({ message: 'Incorrect password' });
     else {
+      const token = jwt.sign({ id: data[0]._id }, config.TOKEN_SECRET.key, { expiresIn: '1h' });
       if (data[0].status === false)
         return res.status(400).json({ isVerifiedUser: false, message: 'login failed. your email is not verified yet!' });
       else if (data[0].status === true)
-        return res.status(200).json(data[0]);
+        return res.status(200).json({ data: data[0], token: token });
     }
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ message: error.message });
   }
 };
@@ -117,11 +120,12 @@ let register = async (req, res) => {
       If you did not request this, please ignore this email.`;
 
       //send verification email to user via nodemailer.
-      const err = nodemailer.SendEmail(mailTo, mailSubject, mailContent);
-      if (err)
-        return res.status(403).json({ message: err });
-      else
-        return res.status(200).json('A verification link has been sent to your email account! please click on that link to verify your account');
+      await nodemailer.SendEmail(mailTo, mailSubject, mailContent).then(response => {
+        if (response)
+          return res.status(200).json('A verification link has been sent to your email account! please click on that link to verify your account!');
+      }).catch(err => {
+        return res.status(403).json({ message: err.response });
+      });
     }
     else
       return res.status(403).json({ message: 'Something went wrong' });
@@ -162,37 +166,28 @@ let forgotpassword = async (req, res) => {
       return res.status(400).json({ message: 'Email not exist!' });
 
     //update token and expire time in db
-    dbOperation.updateData(userModel, criteria, dataToSet);
+    const updatedData = dbOperation.updateData(userModel, criteria, dataToSet);
 
-    const mailTo = value.email;
-    const mailSubject = 'Link To Reset Password';
-    const mailContent =
-      `You are receiving this because you (or someone else) have requested the reset of the password for your account.
+    if (updatedData) {
+      const mailTo = value.email;
+      const mailSubject = 'Link To Reset Password';
+      const mailContent =
+        `You are receiving this because you (or someone else) have requested the reset of the password for your account.
       Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:
       ${config.NODE_SERVER_URL.url}/resetpassword/${token}
       If you did not request this, please ignore this email and your password will remain unchanged.`;
 
-    //send reset password email to user via nodemailer.
-    // const resp = await nodemailer.SendEmail(mailTo, mailSubject, mailContent);
-
-    let mailOptions = {
-      from: `${process.env.EMAIL_ADDRESS}`,
-      to: `${mailTo}`,
-      subject: `${mailSubject}`,
-      text: `${mailContent}`
-    };
-
-    await nodemailer.wrapedSendMail(mailOptions).then(response => {
-      // console.log({ response: res });
-      return res.status(200).json('reset password link sent to your registerd email id!');
-    }).catch(err => {
-      console.log({ err: err })
-      return res.status(403).json({ message: err.response });
-    });
-
-    // else
-    //   return res.status(403).json({ message: response.message });
-
+      //send reset password email to user via nodemailer.
+      await nodemailer.SendEmail(mailTo, mailSubject, mailContent).then(response => {
+        if (response)
+          return res.status(200).json('reset password link sent to your registerd email id!');
+      }).catch(err => {
+        return res.status(403).json({ message: err.response });
+      });
+    }
+    else {
+      return res.status(403).json({ message: 'Something went wrong' });
+    }
   }
   catch (error) {
     console.log({ ercatch: error });
@@ -246,6 +241,7 @@ let resetpassword = async (req, res) => {
 
 /* API to register new user */
 let updateprofile = async (req, res) => {
+  
   const schema = Joi.object({
     email: Joi.string()
       .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
@@ -422,11 +418,12 @@ let resendverificationlink = async (req, res) => {
       If you did not request this, please ignore this email.`;
 
       //send verify account email to user via nodemailer.
-      const err = nodemailer.SendEmail(mailTo, mailSubject, mailContent);
-      if (err)
-        return res.status(403).json({ message: err });
-      else
-        return res.status(200).json('A verification link has been sent to your email account! please click on that link to verify your account');
+      await nodemailer.SendEmail(mailTo, mailSubject, mailContent).then(response => {
+        if (response)
+          return res.status(200).json('A verification link has been sent to your email account! please click on that link to verify your account!');
+      }).catch(err => {
+        return res.status(403).json({ message: err.response });
+      });
     }
     else
       return res.status(403).json({ message: 'Something went wrong' });

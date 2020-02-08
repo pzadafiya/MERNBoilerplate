@@ -1,6 +1,10 @@
 import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, UPDATE_PROFILE_REQUEST, UPDATE_PROFILE_SUCCESS, UPDATE_PROFILE_FAILURE, LOGOUT } from '../constants';
 
-let user = JSON.parse(sessionStorage.getItem('user'));
+let sessionData = JSON.parse(sessionStorage.getItem('user'));
+let user;
+if (sessionData)
+  user = sessionData.user;
+  
 const initialState = user ? { loggedIn: true, user, loading: false } : {};
 
 //This authentication reducer function is used for handle action and return state.
