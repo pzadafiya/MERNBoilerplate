@@ -32,6 +32,7 @@ class VerifyAccount extends Component {
 function mapState(state) {
     const { loading, message } = state.account.verifyaccount;
     return { loading, message };
+
 }
 
 export default withRouter(connect(mapState, { verifyaccount })(VerifyAccount))

@@ -7,13 +7,12 @@ var jwt = require('jsonwebtoken');
 function validateAuthorization(req, res, next) {
 
     if (!req.headers.authorization) {
-        return res.status(401).send({ message: 'Invalid request' });
+        return res.status(403).send({ message: 'Invalid request' });
     }
     const token = req.header('Authorization').replace('Bearer ', '')
-
     jwt.verify(token, config.TOKEN_SECRET.key, function (err, decoded) {
         if (err) {
-            res.json({ message: err.message });
+            return res.status(400).json({ message: err.message });
         } else {
             next();
         }

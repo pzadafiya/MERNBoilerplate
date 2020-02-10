@@ -7,52 +7,52 @@ const authenticationService = require("../services/authentication");
 const authValidate = require("../utilities/authValidate");
 
 // Authentication Routes
-/* User login. */
+/* route for user login. */
 router.get(
     "/login",
     authenticationService.login
 );
 
-/* User register. */
+/* route for user register. */
 router.post(
     "/register",
     authenticationService.register
 );
 
-/* User forgot password. */
+/* route for user forgot password. */
 router.post(
     "/forgotpassword",
     authenticationService.forgotpassword
 );
 
-/* User reset password. */
+/* route for user reset password. */
 router.put(
     "/resetpassword",
     authenticationService.resetpassword
 );
 
-/* User update profile. */
+/* route for user update profile. */
 router.post(
     "/updateprofile",
     authValidate.validateAuthorization,
     authenticationService.updateprofile
 );
 
-/* User change password. */
+/* route for user change password. */
 router.post(
     "/changepassword",
     authValidate.validateAuthorization,
     authenticationService.changepassword
 );
 
-/* User verify account. */
-router.put(
+/* route for user verify account. */
+router.post(
     "/verifyaccount",
     authenticationService.verifyaccount
 );
 
-/* Re-send Verification Link. */
-router.put(
+/* route for user Re-send Verification Link. */
+router.post(
     "/resendverificationlink",
     authenticationService.resendverificationlink
 );

@@ -4,12 +4,11 @@ const MD5 = require('md5');
 const randomBytes = require('randombytes');
 const Joi = require('@hapi/joi');
 const nodemailer = require('../utilities/nodemailer');
-require('dotenv').config();
-
 const dbOperation = require('../utilities/dbOperation');
 const userModel = require("../models/user");
 var config = require("../Utilities/config").config;
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 /* API to login user */
 let login = async (req, res) => {
@@ -58,7 +57,7 @@ let login = async (req, res) => {
   }
 };
 
-/* API to register new user */
+/* API to Register new user */
 let register = async (req, res) => {
   const schema = Joi.object({
     firstname: Joi.string()
@@ -135,7 +134,7 @@ let register = async (req, res) => {
   }
 };
 
-/* API to forgotpassword */
+/* API to Forgot Password */
 let forgotpassword = async (req, res) => {
   const schema = Joi.object({
     email: Joi.string()
@@ -195,7 +194,7 @@ let forgotpassword = async (req, res) => {
   }
 };
 
-/* API to resetpassword */
+/* API to Reset Password */
 let resetpassword = async (req, res) => {
   const schema = Joi.object({
     token: Joi.string()
@@ -239,7 +238,7 @@ let resetpassword = async (req, res) => {
   }
 };
 
-/* API to register new user */
+/* API to Update Profile */
 let updateprofile = async (req, res) => {
   
   const schema = Joi.object({
@@ -288,7 +287,7 @@ let updateprofile = async (req, res) => {
   }
 };
 
-/* API to changepassword */
+/* API to Change Password */
 let changepassword = async (req, res) => {
   const schema = Joi.object({
     email: Joi.string()
@@ -339,7 +338,7 @@ let changepassword = async (req, res) => {
 };
 
 
-/* API to resetpassword */
+/* API to Verify account  */
 let verifyaccount = async (req, res) => {
   const schema = Joi.object({
     token: Joi.string()
@@ -375,7 +374,7 @@ let verifyaccount = async (req, res) => {
   }
 };
 
-/* API to register new user */
+/* API to  Re-send verification link */
 let resendverificationlink = async (req, res) => {
   const schema = Joi.object({
     email: Joi.string()

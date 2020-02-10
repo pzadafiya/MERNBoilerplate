@@ -1,5 +1,5 @@
 import { all, call, fork, put, takeEvery, takeLatest } from 'redux-saga/effects';
-import { axiosGet, axiosPost, axiosPut, axiosPutWithAuthHeader, axiosPostWithAuthHeader } from '../../helpers/apiUtils';
+import { axiosGet, axiosPost, axiosPut, axiosPostWithAuthHeader } from '../../helpers/apiUtils';
 import { alertActions } from '../alert/actions';
 import { CHANGE_PASSWORD_FAILURE, CHANGE_PASSWORD_REQUEST, CHANGE_PASSWORD_SUCCESS, FORGOT_PASSWORD_FAILURE, FORGOT_PASSWORD_REQUEST, FORGOT_PASSWORD_SUCCESS, LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, LOGOUT, REGISTER_FAILURE, REGISTER_REQUEST, REGISTER_SUCCESS, RESET_PASSWORD_FAILURE, RESET_PASSWORD_REQUEST, RESET_PASSWORD_SUCCESS, UPDATE_PROFILE_FAILURE, UPDATE_PROFILE_REQUEST, UPDATE_PROFILE_SUCCESS, VERIFY_ACCOUNT_REQUEST, VERIFY_ACCOUNT_SUCCESS, VERIFY_ACCOUNT_FAILURE, RESEND_VERIFICATION_LINK_REQUEST, RESEND_VERIFICATION_LINK_SUCCESS, RESEND_VERIFICATION_LINK_FAILURE } from './constants';
 
@@ -139,7 +139,7 @@ function* updateProfileUser({ payload: { user, history } }) {
             lastname: user.lastname,
             phonenumber: user.phonenumber
         };
-        
+
         const response = yield call(axiosPostWithAuthHeader, 'updateprofile', params);
 
         if (response.status === 200 && response.statusText === "OK") {
@@ -190,7 +190,7 @@ function* changePasswordUser({ payload: { user, history } }) {
         // handle error
         if (e.response.status !== 200) {
             const data = e.response.data;
-            yield put({ type: CHANGE_PASSWORD_FAILURE, message: data });
+            yield put({ type: CHANGE_PASSWORD_FAILURE });
             yield put(alertActions.showNotification("error", data.message, 3000));
             yield put(alertActions.removeNotification());
         }
@@ -205,7 +205,7 @@ function* verifyAccount({ payload: { token } }) {
         const params = {
             token: token
         };
-        const response = yield call(axiosPut, 'verifyaccount', params);
+        const response = yield call(axiosPost, 'verifyaccount', params);
 
         if (response.status === 200 && response.statusText === "OK") {
             // handle success
@@ -215,7 +215,7 @@ function* verifyAccount({ payload: { token } }) {
         // handle error
         if (e.response.status !== 200) {
             const data = e.response.data;
-            yield put({ type: VERIFY_ACCOUNT_FAILURE, message: data });
+            yield put({ type: VERIFY_ACCOUNT_FAILURE, message: data.message });
             yield put(alertActions.showNotification("error", data.message, 3000));
             yield put(alertActions.removeNotification());
         }
@@ -230,7 +230,7 @@ function* reSendVerificationLink({ payload: { email } }) {
         const params = {
             email: email
         };
-        const response = yield call(axiosPut, 'resendverificationlink', params);
+        const response = yield call(axiosPost, 'resendverificationlink', params);
 
         if (response.status === 200 && response.statusText === "OK") {
             // handle success
@@ -242,7 +242,7 @@ function* reSendVerificationLink({ payload: { email } }) {
         // handle error
         if (e.response.status !== 200) {
             const data = e.response.data;
-            yield put({ type: RESEND_VERIFICATION_LINK_FAILURE, message: data });
+            yield put({ type: RESEND_VERIFICATION_LINK_FAILURE, message: data.message });
             yield put(alertActions.showNotification("error", data.message, 3000));
             yield put(alertActions.removeNotification());
         }
