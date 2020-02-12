@@ -7,7 +7,7 @@ const path = require('path');
 const Storage = multer.diskStorage({
     // destination is used to determine within which folder the uploaded files should be stored.
     destination: (req, file, cb) => {
-        cb(null, "../client/public/users");
+        cb(null, "public/user/images");
     },
     filename: (req, file, cb) => {
         // req.files is an object (String -> Array) where fieldname is the key, and name specified in the form
@@ -16,8 +16,8 @@ const Storage = multer.diskStorage({
     }
 });
 
-const uploadMiddleware = multer({
+const userimagesMiddleware = multer({
     storage: Storage
-}).single('userImage');
+}).single('profileimage');
 
-module.exports = uploadMiddleware;
+module.exports = userimagesMiddleware;

@@ -79,7 +79,7 @@ function* forgotpasswordUser({ payload: { email, history } }) {
         const params = {
             email: email
         }
-        const response = yield call(axiosPost, 'forgotpassword', params);
+        const response = yield call(axiosGet, 'forgotpassword', params);
 
         if (response.status === 200 && response.statusText === "OK") {
             // handle success
@@ -108,7 +108,6 @@ function* resetpasswordUser({ payload: { token, password, history } }) {
             token: token,
             password: password
         };
-        console.log(params)
         const response = yield call(axiosPut, 'resetpassword', params);
         if (response.status === 200 && response.statusText === "OK") {
             // handle success
@@ -133,14 +132,14 @@ function* resetpasswordUser({ payload: { token, password, history } }) {
 // else display alert with error message.
 function* updateProfileUser({ payload: { user, history } }) {
     try {
-        const params = {
-            email: user.email,
-            firstname: user.firstname,
-            lastname: user.lastname,
-            phonenumber: user.phonenumber
-        };
+        var params = new FormData();
+        params.set('firstname', user.firstname);
+        params.set('lastname', user.lastname);
+        params.set('phonenumber', user.phonenumber);
+        params.append('profileimage', user.profileimage);
 
-        const response = yield call(axiosPostWithAuthHeader, 'updateprofile', params);
+        let isMultipartForm = true;
+        const response = yield call(axiosPostWithAuthHeader, 'updateprofile', params, isMultipartForm);
 
         if (response.status === 200 && response.statusText === "OK") {
             // handle success
@@ -173,7 +172,6 @@ function* updateProfileUser({ payload: { user, history } }) {
 function* changePasswordUser({ payload: { user, history } }) {
     try {
         const params = {
-            email: user.email,
             currentpassword: user.currentpassword,
             newpassword: user.newpassword
         };
@@ -293,7 +291,6 @@ export function* watchVerifyAccount() {
 export function* watchReSendVerificationLink() {
     yield takeEvery(RESEND_VERIFICATION_LINK_REQUEST, reSendVerificationLink)
 }
-
 
 function* authenticationSaga() {
     yield all([

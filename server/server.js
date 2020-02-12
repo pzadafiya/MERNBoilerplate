@@ -13,6 +13,12 @@ const cors = require('cors');
 const Route = require('./routes');
 const config = require("./utilities/config").config;
 
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger/swagger.json');
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 require('./utilities/mongooseConfig')();
 
 app.use(bodyParser.json());
@@ -20,7 +26,8 @@ app.use(bodyParser.urlencoded({
   extended: false
 }));
 
-app.use(express.static(path.join(__dirname, "client/build")))
+app.use(express.static(path.join(__dirname, "public")));
+
 app.use(cors());
 app.use('/api', Route);
 

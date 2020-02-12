@@ -6,6 +6,7 @@ import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import * as Yup from 'yup';
 import Loader from '../../components/loader';
 import { register } from '../../store/actions';
+import MaskedInput from "react-text-mask";
 
 //Schema defined using YUP for form validation 
 const signupSchema = Yup.object().shape({
@@ -28,6 +29,8 @@ const signupSchema = Yup.object().shape({
 		.test('termsandcondition', 'You have to agree with our Terms and Conditions!', value => value === true)
 		.required('You have to agree with our Terms and Conditions!')
 });
+
+const phoneNumberMask = [/[1-9]/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/];
 
 class Register extends Component {
 	constructor(props) {
@@ -89,7 +92,7 @@ class Register extends Component {
 									<div className="form-group">
 										<div className="row">
 											<div className="col-12 col-md-6">
-												<label htmlFor="firstname">First Name</label>
+												<label htmlFor="firstname">First Name<span className="text-danger" title="This is required">*</span></label>
 												<Field
 													type="firstname"
 													name="firstname"
@@ -103,7 +106,7 @@ class Register extends Component {
 												/>
 											</div>
 											<div className="col-12 col-md-6">
-												<label htmlFor="lastname">Last Name</label>
+												<label htmlFor="lastname">Last Name<span className="text-danger" title="This is required">*</span></label>
 												<Field
 													type="lastname"
 													name="lastname"
@@ -122,7 +125,7 @@ class Register extends Component {
 
 
 									<div className="form-group">
-										<label htmlFor="email">Email</label>
+										<label htmlFor="email">Email<span className="text-danger" title="This is required">*</span></label>
 										<Field
 											type="email"
 											name="email"
@@ -137,7 +140,7 @@ class Register extends Component {
 									</div>
 
 									<div className="form-group">
-										<label htmlFor="password">Password</label>
+										<label htmlFor="password">Password<span className="text-danger" title="This is required">*</span></label>
 										<Field
 											type="password"
 											name="password"
@@ -153,7 +156,7 @@ class Register extends Component {
 									</div>
 
 									<div className="form-group">
-										<label htmlFor="confirmpassword">Confirm Password</label>
+										<label htmlFor="confirmpassword">Confirm Password<span className="text-danger" title="This is required">*</span></label>
 										<Field
 											type="password"
 											name="confirmpassword"
@@ -171,10 +174,17 @@ class Register extends Component {
 									<div className="form-group">
 										<label htmlFor="phonenumber">Phone Number</label>
 										<Field
-											type="text"
 											name="phonenumber"
-											placeholder="Phone Number"
-											className={`form-control ${touched.phonenumber && errors.phonenumber ? "is-invalid" : ""}`}
+											render={({ field }) => (
+												<MaskedInput
+													{...field}
+													mask={phoneNumberMask}
+													type="text"
+													name="phonenumber"
+													placeholder="Phone Number"
+													className={`form-control ${touched.phonenumber && errors.phonenumber ? "is-invalid" : ""}`}
+												/>
+											)}
 										/>
 										<ErrorMessage
 											component="div"
@@ -232,7 +242,7 @@ class Register extends Component {
 
 									<p className="mb-0 mt-2">Already have an account ?
 									<Link to="/login" className=""> Sign in</Link></p>
-									
+
 									{/*END: register form */}
 								</Form>
 							</React.Fragment>

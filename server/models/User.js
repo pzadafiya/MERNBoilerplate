@@ -51,6 +51,10 @@ let user = new Schema({
         default: null
     },
     
+    profileimage: {
+        type: String,
+        default: null
+    }
 });
 
 

@@ -52,7 +52,7 @@ class ResetPassword extends Component {
                                 <Form>
                                     {/*START : reset password form */}
                                     <div className="form-group">
-                                        <label htmlFor="password">Password</label>
+                                        <label htmlFor="password">Password<span className="text-danger" title="This is required">*</span></label>
                                         <Field
                                             type="password"
                                             name="password"
@@ -68,7 +68,7 @@ class ResetPassword extends Component {
                                     </div>
 
                                     <div className="form-group">
-                                        <label htmlFor="confirmpassword">Confirm Password</label>
+                                        <label htmlFor="confirmpassword">Confirm Password<span className="text-danger" title="This is required">*</span></label>
                                         <Field
                                             type="password"
                                             name="confirmpassword"

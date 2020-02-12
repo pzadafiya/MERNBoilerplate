@@ -36,6 +36,17 @@ const updateData = (Models, criteria, dataToSet, options = {}) =>
             });
     });
 
+//update specific model based on criteria
+const updateDataWithoutFetchNew = (Models, criteria, dataToSet) =>
+    new Promise((resolve, reject) => {
+        Models.findOneAndUpdate(criteria, dataToSet)
+            .then(client => {
+                resolve(client)
+            })
+            .catch(err => {
+                reject(err)
+            });
+    });
 //delete data from specific mdoels based on criteria
 const deleteData = (Models, criteria) =>
     new Promise((resolve, reject) => {
@@ -50,5 +61,6 @@ module.exports = {
     getData: getData,
     createData: createData,
     updateData: updateData,
-    deleteData: deleteData
+    deleteData: deleteData,
+    updateDataWithoutFetchNew: updateDataWithoutFetchNew
 };

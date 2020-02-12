@@ -53,7 +53,7 @@ class Login extends Component {
 								<Form>
 									{/*START : Login form */}
 									<div className="form-group">
-										<label htmlFor="email">Email</label>
+										<label htmlFor="email">Email<span className="text-danger" title="This is required">*</span></label>
 										<Field
 											type="email"
 											name="email"
@@ -69,7 +69,7 @@ class Login extends Component {
 									</div>
 
 									<div className="form-group">
-										<label htmlFor="password">Password</label>
+										<label htmlFor="password">Password<span className="text-danger" title="This is required">*</span></label>
 										<Field
 											type="password"
 											name="password"

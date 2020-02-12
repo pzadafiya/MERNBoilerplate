@@ -1,0 +1,394 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "User Authentication",
+        "description": "User Authentication information",
+        "version": "0.1"
+    },
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "securityDefinitions": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "servers": [{
+        "url": "http://localhost:3002"
+    }],
+    "tags": [{
+            "name": "Authentication"
+        },
+        {
+            "name": "Account"
+        }
+    ],
+    "paths": {
+        "/api/login": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "user login",
+                "description": "user login request",
+                "parameters": [{
+                        "name": "email",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success response"
+                    },
+                    "400": {
+                        "description": "invalid input, object invalid"
+                    },
+                    "401": {
+                        "description": "Unauthorized response"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "add new user to database",
+                "description": "user register request",
+                "parameters": [{
+                    "in": "body",
+                    "name": "registration",
+                    "description": "user registration",
+                    "schema": {
+                        "$ref": "#/definitions/User"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "success response"
+                    },
+                    "400": {
+                        "description": "invalid input, object invalid"
+                    },
+                    "401": {
+                        "description": "Unauthorized response"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/verifyaccount": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "to verify user",
+                "description": "user verify account request",
+                "parameters": [{
+                    "in": "body",
+                    "name": "verify account",
+                    "description": "user verify account",
+                    "schema": {
+                        "type": "object",
+                        "required": [
+                            "token"
+                        ],
+                        "properties": {
+                            "token": {
+                                "type": "string",
+                                "example": "b28af11fcafcddf595a00f7ec50157108da9abc7"
+                            }
+                        }
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "success response"
+                    },
+                    "400": {
+                        "description": "invalid input, object invalid"
+                    },
+                    "401": {
+                        "description": "Unauthorized response"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/resendverificationlink": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "send verification link via email",
+                "description": "user re-send verification link request",
+                "parameters": [{
+                    "in": "body",
+                    "name": "re-send verification link",
+                    "description": "user user re-send verification link",
+                    "schema": {
+                        "type": "object",
+                        "required": [
+                            "email"
+                        ],
+                        "properties": {
+                            "email": {
+                                "type": "string",
+                                "example": "test@test.com"
+                            }
+                        }
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "success response"
+                    },
+                    "400": {
+                        "description": "invalid input, object invalid"
+                    },
+                    "401": {
+                        "description": "Unauthorized response"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/forgotpassword": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "forgot password",
+                "description": "user forgot password request",
+                "parameters": [{
+                    "name": "email",
+                    "in": "query",
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "success response"
+                    },
+                    "400": {
+                        "description": "invalid input, object invalid"
+                    },
+                    "401": {
+                        "description": "Unauthorized response"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/resetpassword": {
+            "put": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "reset password",
+                "description": "user reset password request",
+                "parameters": [{
+                    "in": "body",
+                    "name": "reset password",
+                    "description": "user reset password",
+                    "schema": {
+                        "type": "object",
+                        "required": [
+                            "token",
+                            "password"
+                        ],
+                        "properties": {
+                            "token": {
+                                "type": "string",
+                                "example": "b28af11fcafcddf595a00f7ec50157108da9abc7"
+                            },
+                            "password": {
+                                "type": "string",
+                                "example": "Test@123"
+                            }
+                        }
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "success response"
+                    },
+                    "400": {
+                        "description": "invalid input, object invalid"
+                    },
+                    "401": {
+                        "description": "Unauthorized response"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/updateprofile": {
+            "post": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "update user profile",
+                "security": [{
+                    "Bearer": []
+                }],
+                "summary": "update profile",
+                "description": "profile update request",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "parameters": [{
+                        "in": "formData",
+                        "name": "firstname",
+                        "type": "string",
+                        "required": true,
+                        "description": "user first name"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "lastname",
+                        "type": "string",
+                        "required": true,
+                        "description": "user last name"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "phonenumber",
+                        "type": "string",
+                        "description": "user phone number"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "profileimage",
+                        "type": "file",
+                        "description": "The file to upload."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success response"
+                    },
+                    "400": {
+                        "description": "invalid input, object invalid"
+                    },
+                    "401": {
+                        "description": "Unauthorized response"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/changepassword": {
+            "post": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "change password",
+                "description": "user change password request",
+                "security": [{
+                    "Bearer": []
+                }],
+                "parameters": [{
+                    "in": "body",
+                    "name": "change password",
+                    "description": "user change password",
+                    "schema": {
+                        "type": "object",
+                        "required": [
+                            "email",
+                            "currentpassword",
+                            "newpassword"
+                        ],
+                        "properties": {
+                            "currentpassword": {
+                                "type": "string",
+                                "example": "Test@123"
+                            },
+                            "newpassword": {
+                                "type": "string",
+                                "example": "Test1@123"
+                            }
+                        }
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "success response"
+                    },
+                    "400": {
+                        "description": "invalid input, object invalid"
+                    },
+                    "401": {
+                        "description": "Unauthorized response"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "User": {
+            "type": "object",
+            "required": [
+                "email",
+                "password",
+                "firstname",
+                "lastname"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "test@test.com"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "Test@123"
+                },
+                "firstname": {
+                    "type": "string",
+                    "example": "first name"
+                },
+                "lastname": {
+                    "type": "string",
+                    "example": "last name"
+                },
+                "phonenumber": {
+                    "type": "string",
+                    "example": "111-111-1111"
+                }
+            }
+        }
+    }
+}

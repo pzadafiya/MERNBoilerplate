@@ -4,9 +4,11 @@
 const express = require("express");
 const router = express.Router({ mergeParams: true });
 const authenticationService = require("../services/authentication");
-const authValidate = require("../utilities/authValidate");
+const authenticationMiddleware = require("../utilities/authValidate");
+const userimagesMiddleware = require("../utilities/imgUtils");
 
 // Authentication Routes
+
 /* route for user login. */
 router.get(
     "/login",
@@ -20,7 +22,7 @@ router.post(
 );
 
 /* route for user forgot password. */
-router.post(
+router.get(
     "/forgotpassword",
     authenticationService.forgotpassword
 );
@@ -34,14 +36,15 @@ router.put(
 /* route for user update profile. */
 router.post(
     "/updateprofile",
-    authValidate.validateAuthorization,
+    authenticationMiddleware.validateAuthorization,
+    userimagesMiddleware,
     authenticationService.updateprofile
 );
 
 /* route for user change password. */
 router.post(
     "/changepassword",
-    authValidate.validateAuthorization,
+    authenticationMiddleware.validateAuthorization,
     authenticationService.changepassword
 );
 

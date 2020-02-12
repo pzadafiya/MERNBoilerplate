@@ -8,6 +8,11 @@ const dbOperation = require('../utilities/dbOperation');
 const userModel = require("../models/user");
 var config = require("../Utilities/config").config;
 const jwt = require('jsonwebtoken');
+
+const fs = require('fs')
+const { promisify } = require('util');
+const unlinkAsync = promisify(fs.unlink);
+
 require('dotenv').config();
 
 /* API to login user */
@@ -43,7 +48,7 @@ let login = async (req, res) => {
     const data = await dbOperation.getData(userModel, criteria);
 
     if (data && data.length === 0)
-      return res.status(403).json({ message: 'Incorrect password' });
+      return res.status(401).json({ message: 'Incorrect password' });
     else {
       const token = jwt.sign({ id: data[0]._id }, config.TOKEN_SECRET.key, { expiresIn: '1h' });
       if (data[0].status === false)
@@ -52,7 +57,6 @@ let login = async (req, res) => {
         return res.status(200).json({ data: data[0], token: token });
     }
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ message: error.message });
   }
 };
@@ -123,11 +127,11 @@ let register = async (req, res) => {
         if (response)
           return res.status(200).json('A verification link has been sent to your email account! please click on that link to verify your account!');
       }).catch(err => {
-        return res.status(403).json({ message: err.response });
+        return res.status(401).json({ message: err.response });
       });
     }
     else
-      return res.status(403).json({ message: 'Something went wrong' });
+      return res.status(401).json({ message: 'Something went wrong' });
 
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -142,7 +146,7 @@ let forgotpassword = async (req, res) => {
       .required()
   });
 
-  const { error, value } = schema.validate({ email: req.body.email });
+  const { error, value } = schema.validate({ email: req.query.email });
 
   if (error)
     return res.status(400).json({ message: error.details[0].message });
@@ -181,15 +185,14 @@ let forgotpassword = async (req, res) => {
         if (response)
           return res.status(200).json('reset password link sent to your registerd email id!');
       }).catch(err => {
-        return res.status(403).json({ message: err.response });
+        return res.status(401).json({ message: err.response });
       });
     }
     else {
-      return res.status(403).json({ message: 'Something went wrong' });
+      return res.status(401).json({ message: 'Something went wrong' });
     }
   }
   catch (error) {
-    console.log({ ercatch: error });
     return res.status(500).json({ message: error.message });
   }
 };
@@ -217,10 +220,10 @@ let resetpassword = async (req, res) => {
     const response = await dbOperation.getData(userModel, criteria);
 
     if (response.length === 0)
-      return res.status(403).json({ message: 'token not valid!' });
+      return res.status(401).json({ message: 'token not valid!' });
 
     if (response[0].resetPasswordExpires < Date.now())
-      return res.status(403).json({ message: 'token expired' });
+      return res.status(401).json({ message: 'token expired' });
 
     const dataToSet = {
       resetPasswordToken: null,
@@ -240,11 +243,7 @@ let resetpassword = async (req, res) => {
 
 /* API to Update Profile */
 let updateprofile = async (req, res) => {
-  
   const schema = Joi.object({
-    email: Joi.string()
-      .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
-      .required(),
     firstname: Joi.string()
       .required(),
     lastname: Joi.string()
@@ -255,7 +254,6 @@ let updateprofile = async (req, res) => {
   });
 
   const { error, value } = schema.validate({
-    email: req.body.email,
     firstname: req.body.firstname,
     lastname: req.body.lastname,
     phonenumber: req.body.phonenumber
@@ -266,23 +264,31 @@ let updateprofile = async (req, res) => {
 
   try {
     let criteria = {
-      email: value.email
+      _id: req.userId
     };
 
-    const dataToSet = {
-      email: value.email,
+    let dataToSet = {
       firstName: value.firstname,
       lastName: value.lastname,
-      phoneNumber: value.phonenumber
+      phoneNumber: value.phonenumber,
     };
+    const file = req.file;
+    if (file) {
+      dataToSet.profileimage = file.filename;
+    }
 
-    await dbOperation.updateData(userModel, criteria, dataToSet);
+    const updatedData = await dbOperation.updateDataWithoutFetchNew(userModel, criteria, dataToSet);
+
+    if (file && updatedData && updatedData.profileimage)
+      await unlinkAsync('public/user/images/' + updatedData.profileimage);
+
     const data = await dbOperation.getData(userModel, criteria);
 
     if (data && data.length > 0) {
       return res.status(200).json(data[0]);
     }
   } catch (error) {
+
     return res.status(500).json({ message: error.message });
   }
 };
@@ -290,9 +296,6 @@ let updateprofile = async (req, res) => {
 /* API to Change Password */
 let changepassword = async (req, res) => {
   const schema = Joi.object({
-    email: Joi.string()
-      .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
-      .required(),
     currentpassword: Joi.string()
       .pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])"))
       .required(),
@@ -303,7 +306,6 @@ let changepassword = async (req, res) => {
 
   const { error, value } = schema.validate(
     {
-      email: req.body.email,
       currentpassword: req.body.currentpassword,
       newpassword: req.body.newpassword
     });
@@ -313,23 +315,21 @@ let changepassword = async (req, res) => {
 
   try {
     let criteria = {
-      email: value.email,
+      _id: req.userId,
       password: MD5(MD5(value.currentpassword)),
       status: true
     };
-
+    
     const response = await dbOperation.getData(userModel, criteria);
-
     if (response.length === 0)
-      return res.status(403).json({ message: 'current password not valid!' });
+      return res.status(401).json({ message: 'current password not valid!' });
 
     const dataToSet = {
       password: MD5(MD5(value.newpassword))
     };
 
     const updatedData = await dbOperation.updateData(userModel, criteria, dataToSet);
-
-    if (updatedData.email === value.email)
+    if (updatedData)
       return res.status(200).json('password change successfully! you can login with new password');
 
   } catch (error) {
@@ -357,7 +357,7 @@ let verifyaccount = async (req, res) => {
     const response = await dbOperation.getData(userModel, criteria);
 
     if (response.length === 0)
-      return res.status(403).json({ message: 'your account is already verified or token not valid.' });
+      return res.status(401).json({ message: 'your account is already verified or token not valid.' });
 
     const dataToSet = {
       registrationToken: null,
@@ -399,6 +399,9 @@ let resendverificationlink = async (req, res) => {
 
     if (response && response.length <= 0)
       return res.status(400).json({ message: 'no user found' });
+    else if (response[0].status === true)
+      return res.status(400).json({ message: 'user is already verified.' });
+
 
     const token = randomBytes(20).toString('hex');
     const dataToSet = {
@@ -421,11 +424,11 @@ let resendverificationlink = async (req, res) => {
         if (response)
           return res.status(200).json('A verification link has been sent to your email account! please click on that link to verify your account!');
       }).catch(err => {
-        return res.status(403).json({ message: err.response });
+        return res.status(401).json({ message: err.response });
       });
     }
     else
-      return res.status(403).json({ message: 'Something went wrong' });
+      return res.status(401).json({ message: 'Something went wrong' });
 
   } catch (error) {
     return res.status(500).json({ message: error.message });

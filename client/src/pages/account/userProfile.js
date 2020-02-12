@@ -6,6 +6,8 @@ import * as Yup from 'yup';
 import Loader from '../../components/loader';
 import { updateprofile } from '../../store/actions';
 import { Breadcrumb, BreadcrumbItem } from "reactstrap";
+import Thumb from "../../components/thumb";
+import MaskedInput from "react-text-mask";
 
 //Schema defined using YUP for form validation
 const profileSchema = Yup.object().shape({
@@ -17,15 +19,33 @@ const profileSchema = Yup.object().shape({
 		.min(12)
 });
 
+const phoneNumberMask = [/[1-9]/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/];
+
 class UserProfile extends Component {
+	state = {
+		previewImage: undefined
+	};
+
+	componentDidMount() {
+		this.setState({ previewImage: this.props.user.profileimage });
+	}
+
+	componentDidUpdate(prevProps) {
+		if (prevProps.user && this.props.user.profileimage !== prevProps.user.profileimage) {
+			this.setState({ previewImage: this.props.user.profileimage });
+		}
+	}
+
 	render() {
+		const { previewImage } = this.state;
+
 		return (
 			<div className="container-fluid mt-4">
 				<Breadcrumb>
 					<BreadcrumbItem>Account</BreadcrumbItem>
 					<BreadcrumbItem active>Profile</BreadcrumbItem>
 				</Breadcrumb>
-				
+
 				<div className="row">
 					<div className="col-6">
 						<div className="card-body">
@@ -34,30 +54,31 @@ class UserProfile extends Component {
 									email: this.props.user.email,
 									firstname: this.props.user.firstName,
 									lastname: this.props.user.lastName,
-									phonenumber: this.props.user.phoneNumber
+									phonenumber: this.props.user.phoneNumber,
+									profileimage: this.props.user.profileimage
 								}}
 
 								validationSchema={profileSchema}
 								onSubmit={(values, { setSubmitting }) => {
-
 									this.props.updateprofile(
 										{
 											'email': this.props.user.email,
 											'firstname': values.firstname,
 											'lastname': values.lastname,
 											'phonenumber': values.phonenumber,
+											'profileimage': values.profileimage
 										}, this.props.history);
 									setSubmitting(false);
 								}}
 							>
-								{({ touched, errors, isSubmitting }) => (
+								{({ values, touched, errors, isSubmitting, setFieldValue }) => (
 									<React.Fragment>
 										{this.props.loading ? <Loader /> : null}
 
 										<Form>
 											{/*START : Profile form */}
 											<div className="form-group">
-												<label htmlFor="email">Email</label>
+												<label htmlFor="email">Email<span className="text-danger" title="This is required">*</span></label>
 												<Field
 													type="email"
 													name="email"
@@ -73,7 +94,7 @@ class UserProfile extends Component {
 											</div>
 
 											<div className="form-group">
-												<label htmlFor="firstname">First Name</label>
+												<label htmlFor="firstname">First Name<span className="text-danger" title="This is required">*</span></label>
 												<Field
 													type="firstname"
 													name="firstname"
@@ -88,7 +109,7 @@ class UserProfile extends Component {
 											</div>
 
 											<div className="form-group">
-												<label htmlFor="lastname">Last Name</label>
+												<label htmlFor="lastname">Last Name<span className="text-danger" title="This is required">*</span></label>
 												<Field
 													type="lastname"
 													name="lastname"
@@ -105,17 +126,45 @@ class UserProfile extends Component {
 											<div className="form-group">
 												<label htmlFor="phonenumber">Phone Number</label>
 												<Field
-													type="text"
 													name="phonenumber"
-													placeholder="Phone Number"
-													className={`form-control ${touched.phonenumber && errors.phonenumber ? "is-invalid" : ""}`}
+													render={({ field }) => (
+														<MaskedInput
+															{...field}
+															mask={phoneNumberMask}
+															type="text"
+															name="phonenumber"
+															placeholder="Phone Number"
+															className={`form-control ${touched.phonenumber && errors.phonenumber ? "is-invalid" : ""}`}
+														/>
+													)}
 												/>
+
 												<ErrorMessage
 													component="div"
 													name="phonenumber"
 													className="invalid-feedback"
 												/>
 											</div>
+
+											<div className="form-group">
+												<label htmlFor="profileimage">Profile Image</label>
+
+												<input id="file" name="profileimage" type="file" onChange={(event) => {
+													setFieldValue("profileimage", event.currentTarget.files[0]);
+													this.setState({ previewImage: event.currentTarget.files[0] });
+												}}
+													className={`form-control ${touched.profileimage && errors.profileimage ? "is-invalid" : ""}`}
+												/>
+
+												<Thumb file={previewImage} />
+
+												<ErrorMessage
+													component="div"
+													name="profileimage"
+													className="invalid-feedback"
+												/>
+											</div>
+
 											<button
 												className="btn btn-primary"
 												type="submit"
@@ -130,8 +179,6 @@ class UserProfile extends Component {
 						</div>
 					</div>
 				</div>
-
-
 			</div>
 		)
 	}
@@ -139,8 +186,8 @@ class UserProfile extends Component {
 
 /* Redux mapping */
 function mapState(state) {
-	const { user } = state.account.authentication;
-	return { user };
+	const { loading, user } = state.account.authentication;
+	return { loading, user };
 }
 
 export default withRouter(connect(mapState, { updateprofile })(UserProfile));

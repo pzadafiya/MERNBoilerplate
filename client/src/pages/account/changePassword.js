@@ -43,10 +43,8 @@ class ChangePassword extends Component {
 
 								validationSchema={changePasswordSchema}
 								onSubmit={(values, { setSubmitting, resetForm }) => {
-
 									this.props.changepassword(
 										{
-											'email': this.props.user.email,
 											'currentpassword': values.currentpassword,
 											'newpassword': values.newpassword
 										}, this.props.history);
@@ -61,7 +59,7 @@ class ChangePassword extends Component {
 										<Form>
 											{/*START : change password form */}
 											<div className="form-group">
-												<label htmlFor="password">Current Password</label>
+												<label htmlFor="password">Current Password<span className="text-danger" title="This is required">*</span></label>
 												<Field
 													type="password"
 													name="currentpassword"
@@ -77,7 +75,7 @@ class ChangePassword extends Component {
 											</div>
 
 											<div className="form-group">
-												<label htmlFor="newpassword">New Password</label>
+												<label htmlFor="newpassword">New Password<span className="text-danger" title="This is required">*</span></label>
 												<Field
 													type="password"
 													name="newpassword"
@@ -93,7 +91,7 @@ class ChangePassword extends Component {
 											</div>
 
 											<div className="form-group">
-												<label htmlFor="confirmpassword">Confirm Password</label>
+												<label htmlFor="confirmpassword">Confirm Password<span className="text-danger" title="This is required">*</span></label>
 												<Field
 													type="password"
 													name="confirmpassword"
@@ -132,8 +130,8 @@ class ChangePassword extends Component {
 
 /* Redux mapping */
 function mapState(state) {
-	const { user } = state.account.authentication;
-	return { user };
+	const { loading, user } = state.account.authentication;
+	return { loading, user };
 }
 
 export default withRouter(connect(mapState, { changepassword })(ChangePassword));

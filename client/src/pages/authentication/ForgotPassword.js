@@ -52,7 +52,7 @@ class ForgotPassword extends Component {
                                         <p>Please enter your email address. You will receive a link to create a new password via email.</p>
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="email">Email Address</label>
+                                        <label htmlFor="email">Email Address<span className="text-danger" title="This is required">*</span></label>
                                         <Field
                                             type="email"
                                             name="email"
