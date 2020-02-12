@@ -14,3 +14,4 @@ package-lock.json
 server/package-lock.json
 client/build
 server/.env
+server/public/user/images
