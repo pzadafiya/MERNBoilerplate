@@ -1,4 +1,4 @@
-# MERN boilerplate
+# MERN Starter Kit
 
 This project was bootstrapped with Create React App.
 
